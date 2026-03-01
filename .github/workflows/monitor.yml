@@ -1,6 +1,13 @@
 ﻿name: Monitor MinDefensa
 
 on:
+  push:
+    branches: [ "main" ]
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+on:
   schedule:
     - cron: "*/15 * * * *"
   workflow_dispatch:
