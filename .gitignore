@@ -46,3 +46,9 @@ ver_columnas.py
 ejecutar_monitor.bat
 enviar_reporte.py
 *.xlsx
+
+*.csv
+mindefensa_state.json
+monitor_log.txt
+mindefensa_xlsx/
+
