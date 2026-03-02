@@ -1,9 +1,9 @@
 ﻿name: Monitor MinDefensa
 on:
   schedule:
-    - cron: "*/15 * * * *"     # cada 15 min (cambios)
-    - cron: "0 23 * * 2"       # martes 6pm Colombia (previo miercoles)
-    - cron: "0 23 * * 5"       # viernes 6pm Colombia (previo lunes)
+    - cron: "*/15 * * * *"
+    - cron: "0 23 * * 2"
+    - cron: "0 23 * * 5"
   workflow_dispatch:
 
 jobs:
@@ -44,6 +44,8 @@ jobs:
 
       - name: Ejecutar monitor
         id: monitor
+        env:
+          FORCE_DOWNLOAD_ALL: ${{ github.event_name == 'workflow_dispatch' || github.event.schedule == '0 23 * * 2' || github.event.schedule == '0 23 * * 5' }}
         run: python monitor.py
 
       - name: Generar reporte PDF
