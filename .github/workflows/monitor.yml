@@ -32,10 +32,10 @@ jobs:
         id: monitor
         run: python monitor.py
       - name: Generar reporte PDF
-        if: steps.monitor.outputs.hay_cambios == 'true' || github.event.schedule == '0 23 * * 2' || github.event.schedule == '0 23 * * 5'
+        if: steps.monitor.outputs.hay_cambios == 'true' || github.event_name == 'workflow_dispatch' || github.event.schedule == '0 23 * * 2' || github.event.schedule == '0 23 * * 5'
         run: python generar_reporte.py
       - name: Enviar correo con reporte
-        if: steps.monitor.outputs.hay_cambios == 'true' || github.event.schedule == '0 23 * * 2' || github.event.schedule == '0 23 * * 5'
+        if: steps.monitor.outputs.hay_cambios == 'true' || github.event_name == 'workflow_dispatch' || github.event.schedule == '0 23 * * 2' || github.event.schedule == '0 23 * * 5'
         env:
           GMAIL_USER: ${{ secrets.GMAIL_USER }}
           GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
