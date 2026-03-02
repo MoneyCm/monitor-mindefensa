@@ -84,6 +84,126 @@ def total_anio(df, anio, hasta_mes=None):
 
 
 
+
+
+
+def grafica_tendencia_smallmultiples(datos, fecha_max, delitos, meses_back=24):
+    """
+    Small multiples: una mini-gráfica por delito (apiladas).
+    Ventana: últimos N meses hasta fecha_max.
+    Mucho más legible que 3 líneas en un solo panel.
+    """
+    import pandas as pd
+    import matplotlib.pyplot as plt
+    from pathlib import Path
+
+    fin = pd.Timestamp(fecha_max).to_period("M").to_timestamp("M")
+    ini = (fin.to_period("M") - (meses_back - 1)).to_timestamp("M")
+    meses = pd.period_range(ini.to_period("M"), fin.to_period("M"), freq="M").to_timestamp("M")
+
+    n = len(delitos)
+    fig = plt.figure(figsize=(10, 5.2))
+    gs = fig.add_gridspec(nrows=n, ncols=1, hspace=0.15)
+
+    # Para alinear escalas visualmente, calculamos max global
+    max_y = 0
+    series = {}
+
+    for d in delitos:
+        df = datos.get(d)
+        if df is None or len(df) == 0:
+            y = [0]*len(meses)
+        else:
+            sub = df.copy()
+            sub = sub[(sub["FECHA_HECHO"] >= ini) & (sub["FECHA_HECHO"] <= fin)]
+            g = (
+                sub.groupby(sub["FECHA_HECHO"].dt.to_period("M"))["col_cantidad"]
+                .sum()
+                .reindex(meses.to_period("M"), fill_value=0)
+            )
+            y = g.values.tolist()
+
+        # para delitos tipo casos, redondeamos; (si fueran kg, igual se grafican bien)
+        try:
+            y2 = [float(v) for v in y]
+        except Exception:
+            y2 = y
+        series[d] = y2
+        max_y = max(max_y, max(y2) if y2 else 0)
+
+    for i, d in enumerate(delitos):
+        ax = fig.add_subplot(gs[i, 0])
+
+        y = series[d]
+        ax.plot(meses, y, linewidth=1.8, alpha=0.95)  # sin marcadores
+
+        # etiqueta discreta a la derecha
+        try:
+            ax.text(meses[-1], y[-1], f" {int(round(y[-1]))}", fontsize=8, va="center")
+        except Exception:
+            pass
+
+        ax.set_ylabel("", fontsize=8)
+        ax.grid(True, linewidth=0.3, alpha=0.25)
+
+        # Título lateral por panel (más limpio que leyenda)
+        ax.text(0.01, 0.85, d, transform=ax.transAxes, fontsize=9, fontweight="bold")
+
+        # misma escala Y para comparar
+        ax.set_ylim(0, max(1, max_y * 1.05))
+
+        # Solo el último panel muestra X
+        if i < n - 1:
+            ax.set_xticklabels([])
+            ax.set_xlabel("")
+        else:
+            ticks = meses[::3]  # cada 3 meses
+            ax.set_xticks(ticks)
+            ax.set_xticklabels([m.strftime("%b-%y") for m in ticks], fontsize=8, rotation=35, ha="right")
+
+    fig.suptitle(f"Tendencia mensual (últimos {meses_back} meses) — Jamundí", fontsize=11, y=0.98)
+
+    out = Path("tendencia_24m.png")
+    fig.tight_layout(rect=[0, 0, 1, 0.96])
+    fig.savefig(out, dpi=160, bbox_inches="tight")
+    plt.close(fig)
+    return str(out)
+def grafica_tendencia_24m(datos, fecha_max, delitos, meses_back=24):
+    import pandas as pd
+    import matplotlib.pyplot as plt
+
+    fin = pd.Timestamp(fecha_max.year, fecha_max.month, 1)
+    ini = fin - pd.DateOffset(months=meses_back - 1)
+    idx = pd.date_range(ini, fin, freq="MS")
+
+    plt.figure(figsize=(10, 3.3), dpi=140)
+
+    for nombre in delitos:
+        df = datos.get(nombre)
+        if df is None or df.empty:
+            continue
+
+        s = (df.assign(MES_FECHA=pd.to_datetime(df["FECHA_HECHO"], errors="coerce"))
+               .dropna(subset=["MES_FECHA"])
+               .assign(MES_FECHA=lambda x: x["MES_FECHA"].dt.to_period("M").dt.to_timestamp())
+               .groupby("MES_FECHA")["col_cantidad"].sum()
+               .reindex(idx, fill_value=0.0))
+
+        plt.plot(idx, s.values, marker="o", linewidth=2, label=nombre)
+
+    etiquetas = [f"{MESES_ES[d.month][:3]}-{str(d.year)[2:]}" for d in idx]
+    plt.xticks(idx, etiquetas, rotation=0)
+    plt.grid(True, axis="y", alpha=0.25)
+    plt.ylabel("Casos / kg")
+    plt.title("Tendencia ultimos 24 meses — Jamundi", fontweight="bold")
+    plt.legend(loc="upper right", fontsize=7)
+
+    out = "tendencia_24m.png"
+    plt.tight_layout()
+    plt.savefig(out)
+    plt.close()
+    return out
+
 def fmt_val(nombre, v):
     # Normaliza NaN/None
     if v is None:
@@ -166,7 +286,7 @@ def grafica_mensual(datos, anio_actual):
     for delito, color, marker in zip(principales, colores_l, markers):
         if delito in datos:
             serie = serie_mensual(datos[delito], anio_actual)
-            ax.plot(meses, serie, marker=marker, label=delito, color=color, linewidth=2, markersize=5, zorder=3)
+            ax.plot(meses, serie, marker=None, label=delito, color=color, linewidth=2, markersize=5, zorder=3)
             ax.fill_between(meses, serie, alpha=0.07, color=color)
     ax.set_title(f'Tendencia Mensual {anio_actual} — Delitos Prioritarios', fontsize=11, fontweight='bold', color='#281FD0', pad=10)
     ax.set_ylabel('Casos', fontsize=9, color='#606175')
@@ -305,7 +425,10 @@ def generar_pdf(datos, ruta_salida):
     historia.append(HRFlowable(width=W, thickness=2, color=AMARILLO))
     historia.append(Spacer(1, 0.15*cm))
     try:
-        historia.append(Image(grafica_mensual(datos, anio_actual), width=W, height=W*0.30))
+        # Tendencia 24 meses — small multiples (Top 3 fijo)
+        delitos_prio = ['Homicidio Intencional','Lesiones Comunes','Violencia Intrafamiliar']
+        img_t = grafica_tendencia_smallmultiples(datos, fecha_max, delitos_prio, meses_back=24)
+        historia.append(Image(img_t, width=W, height=W*0.55))
     except Exception as e:
         historia.append(Paragraph(f"Grafica no disponible: {e}", E('err2', fontSize=8)))
 
