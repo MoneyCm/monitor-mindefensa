@@ -60,12 +60,16 @@ def leer_datos():
             continue
         try:
             df = pd.read_excel(ruta, engine='calamine')
+            df['COD_MUNI'] = __pd.to_numeric(df['COD_MUNI'], errors='coerce')
             df = df[df['COD_MUNI'] == COD_MUNI].copy()
             col_fecha = 'FECHA_HECHO' if 'FECHA_HECHO' in df.columns else 'FECHA HECHO'
             df['FECHA_HECHO'] = pd.to_datetime(df[col_fecha], errors='coerce')
             df['ANIO'] = df['FECHA_HECHO'].dt.year
             df['MES']  = df['FECHA_HECHO'].dt.month
-            df['col_cantidad'] = df[cfg['col']]
+            raw = df[cfg['col']]
+            if raw.dtype == object:
+                raw = raw.astype(str).str.replace('.', '', regex=False).str.replace(',', '.', regex=False)
+            df['col_cantidad'] = __pd.to_numeric(raw, errors='coerce').fillna(0)
             datos[nombre] = df
             print(f"  [OK] {nombre}: {len(df)} filas")
         except Exception as e:
@@ -76,7 +80,7 @@ def total_anio(df, anio, hasta_mes=None):
     sub = df[df['ANIO'] == anio]
     if hasta_mes:
         sub = sub[sub['MES'] <= hasta_mes]
-    return int(sub['col_cantidad'].sum())
+    return float(sub['col_cantidad'].sum())
 
 
 def calcular_variacion_estado(v_prev: int, v_act: int):
@@ -250,7 +254,7 @@ def generar_pdf(datos, ruta_salida):
             TD(nombre),
             TD(str(ant), align=TA_CENTER),
             TD(str(act), bold=True, align=TA_CENTER),
-            TD(f"{signo}{pct:.1f}%", clr=clr_v, align=TA_CENTER, bold=True),
+            TD(var_txt, clr=clr_v, align=TA_CENTER, bold=True),
             TD(flecha, clr=clr_v, align=TA_CENTER, bold=True),
         ])
 
