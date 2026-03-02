@@ -86,18 +86,17 @@ def total_anio(df, anio, hasta_mes=None):
 
 def fmt_val(nombre, v):
     # Normaliza NaN/None
-    try:
-        if v is None:
-            return "0"
-    except Exception:
-        pass
+    if v is None:
+        v = 0
 
-    # Incautaciones (kg): 3 decimales, sin ruido float
+    # Incautaciones (kg): 3 decimales + unidad
     if "Incautacion" in nombre or "Incautación" in nombre:
         try:
-            return f"{float(v):.3f}".rstrip("0").rstrip(".")
+            num = float(v)
+            txt = f"{num:.3f}".rstrip("0").rstrip(".")
+            return f"{txt} kg"
         except Exception:
-            return str(v)
+            return f"{v} kg"
 
     # Resto (casos/víctimas): entero
     try:
