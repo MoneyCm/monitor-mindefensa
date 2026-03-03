@@ -128,7 +128,41 @@ with sync_playwright() as p:
         traceback.print_exc()
     finally:
         browser.close()
-        print("\n🔚 Navegador cerrado")
+        # FASE 3: Descarga automatica de los archivos de interes
+    ARCHIVOS_INTERES = [
+        "HOMICIDIO INTENCIONAL", "LESIONES COMUNES", "VIOLENCIA INTRAFAMILIAR",
+        "DELITOS SEXUALES", "SECUESTRO", "EXTORSIÓN", "TERRORISMO", "MASACRES",
+        "AFECTACIÓN A LA FUERZA PÚBLICA", "PIRATERÍA TERRESTRE",
+        "TRATA DE PERSONAS Y TRÁFICO DE MIGRANTES", "INVASIÓN DE TIERRAS",
+        "HURTO PERSONAS", "HURTO A RESIDENCIAS", "HURTO DE VEHÍCULOS",
+        "HURTO A COMERCIO", "INCAUTACIÓN DE COCAINA", "INCAUTACIÓN DE MARIHUANA"
+    ]
+
+    import requests
+    import unicodedata
+    def norm(t): return ''.join(c for c in unicodedata.normalize('NFD', t.upper()) if unicodedata.category(c) != 'Mn')
+    
+    interes_norm = [norm(x) for x in ARCHIVOS_INTERES]
+    
+    print("\n📥 Descargando archivos de interes...")
+    for item in archivos_detectados:
+        nombre = item['nombre']
+        nombre_norm = norm(nombre)
+        
+        if any(x in nombre_norm for x in interes_norm):
+            print(f"  -> {nombre}...", end="", flush=True)
+            try:
+                r = requests.get(item['url_descarga'], timeout=90)
+                if r.status_code == 200 and len(r.content) > 10000:
+                    with open(nombre, 'wb') as f:
+                        f.write(r.content)
+                    print(" OK")
+                else:
+                    print(f" ERROR (HTTP {r.status_code})")
+            except Exception as e:
+                print(f" ERROR: {e}")
+
+    print("\n🔚 Navegador cerrado")
 
 print("\n" + "="*80)
 print("✅ Proceso completado")

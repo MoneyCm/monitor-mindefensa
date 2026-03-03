@@ -1,7 +1,7 @@
 ﻿name: Monitor MinDefensa
 on:
   schedule:
-    - cron: "*/15 * * * *"
+    - cron: "0 12 * * *"
     - cron: "0 23 * * 2"
     - cron: "0 23 * * 5"
   workflow_dispatch:
