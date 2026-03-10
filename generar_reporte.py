@@ -1,8 +1,9 @@
 """
-generar_reporte.py — Identidad oficial Alcaldía de Jamundí
+generar_reporte.py — Identidad oficial Alcaldía de Jamundí (Versión MinDefensa Premium)
 Colores: Azul #281FD0, Amarillo #FFE000
 """
-import os, sys
+
+import os, sys, unicodedata, re, json
 from datetime import datetime
 from pathlib import Path
 import pandas as pd
@@ -16,8 +17,8 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_RIGHT
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image, HRFlowable
 
+# ── Identidad ────────────────────────────────────────────────────────────────
 AZUL       = colors.HexColor("#281FD0")
-AZUL_CLARO = colors.HexColor("#3A30F1")
 AMARILLO   = colors.HexColor("#FFE000")
 NEGRO      = colors.HexColor("#1A1A2E")
 GRIS       = colors.HexColor("#606175")
@@ -25,205 +26,269 @@ GRIS_FONDO = colors.HexColor("#F4F4F8")
 ROJO_ALT   = colors.HexColor("#C0392B")
 VERDE      = colors.HexColor("#1A7A4A")
 
-COD_MUNI = 76364
-CARPETA  = "."
-SALIDA   = "reporte_observatorio.pdf"
-ESCUDO   = "escudo_jamundi.png"
 MESES_ES = ['','Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']
 
-DATASETS = {
-    "Homicidio Intencional":      {"file": "HOMICIDIO INTENCIONAL.xlsx",                               "col": "VICTIMAS"},
-    "Lesiones Comunes":           {"file": "LESIONES COMUNES.xlsx",                                    "col": "CANTIDAD"},
-    "Violencia Intrafamiliar":    {"file": "VIOLENCIA INTRAFAMILIAR.xlsx",                             "col": "CANTIDAD"},
-    "Delitos Sexuales":           {"file": "DELITOS SEXUALES.xlsx",                                    "col": "CANTIDAD"},
-    "Secuestro":                  {"file": "SECUESTRO.xlsx",                                           "col": "CANTIDAD"},
-    "Extorsion":                  {"file": "EXTORSIÓN.xlsx",                                      "col": "CANTIDAD"},
-    "Terrorismo":                 {"file": "TERRORISMO.xlsx",                                          "col": "CANTIDAD"},
-    "Masacres":                   {"file": "MASACRES.xlsx",                                            "col": "VICTIMAS"},
-    "Afectacion Fuerza Publica":  {"file": "AFECTACIÓN A LA FUERZA PÚBLICA.xlsx",            "col": "CANTIDAD"},
-    "Pirateria Terrestre":        {"file": "PIRATERÍA TERRESTRE.xlsx",                            "col": "CANTIDAD"},
-    "Trata de Personas":          {"file": "TRATA DE PERSONAS Y TRÁFICO DE MIGRANTES.xlsx",       "col": "CANTIDAD"},
-    "Invasion de Tierras":        {"file": "INVASIÓN DE TIERRAS.xlsx",                            "col": "CANTIDAD"},
-    "Hurto a Personas":           {"file": "HURTO PERSONAS.xlsx",                                      "col": "CANTIDAD"},
-    "Hurto a Residencias":        {"file": "HURTO A RESIDENCIAS.xlsx",                                 "col": "CANTIDAD"},
-    "Hurto de Vehiculos":         {"file": "HURTO DE VEHÍCULOS.xlsx",                             "col": "CANTIDAD"},
-    "Hurto a Comercio":           {"file": "HURTO A COMERCIO.xlsx",                                    "col": "CANTIDAD"},
-    "Incautacion Cocaina":        {"file": "INCAUTACIÓN DE COCAINA.xlsx",                         "col": "CANTIDAD"},
-    "Incautacion Marihuana":      {"file": "INCAUTACIÓN DE MARIHUANA.xlsx",                       "col": "CANTIDAD"},
+COD_MUNI = 76364
+CARPETA  = Path("mindefensa_xlsx")
+SALIDA   = "reporte_observatorio.pdf"
+ESCUDO   = "escudo_jamundi.png"
+
+# Mapeo de Delito -> Fragmento de nombre de archivo y columna de datos
+DATASETS_CONFIG = {
+    "Homicidio Intencional":      {"pattern": "HOMICIDIO INTENCIONAL", "col": "VICTIMAS"},
+    "Lesiones Comunes":           {"pattern": "LESIONES COMUNES",      "col": "CANTIDAD"},
+    "Violencia Intrafamiliar":    {"pattern": "VIOLENCIA INTRAFAMILIAR", "col": "CANTIDAD"},
+    "Delitos Sexuales":           {"pattern": "DELITOS SEXUALES",      "col": "CANTIDAD"},
+    "Secuestro":                  {"pattern": "SECUESTRO",             "col": "CANTIDAD"},
+    "Extorsión":                  {"pattern": "EXTORSION",             "col": "CANTIDAD"},
+    "Terrorismo":                 {"pattern": "TERRORISMO",            "col": "CANTIDAD"},
+    "Masacres":                   {"pattern": "MASACRES",              "col": "VICTIMAS"},
+    "Afectación Fuerza Pública":  {"pattern": "AFECTACION FUERZA PUBLICA", "col": "CANTIDAD"},
+    "Piratería Terrestre":        {"pattern": "PIRATERIA TERRESTRE",   "col": "CANTIDAD"},
+    "Trata de Personas":          {"pattern": "TRATA DE PERSONAS",     "col": "CANTIDAD"},
+    "Invasión de Tierras":        {"pattern": "INVASION DE TIERRAS",   "col": "CANTIDAD"},
+    "Hurto a Personas":           {"pattern": "HURTO PERSONAS",        "col": "CANTIDAD"},
+    "Hurto a Residencias":        {"pattern": "HURTO A RESIDENCIAS",   "col": "CANTIDAD"},
+    "Hurto de Vehículos":         {"pattern": "HURTO DE VEHICULOS",    "col": "CANTIDAD"},
+    "Hurto a Comercio":           {"pattern": "HURTO A COMERCIO",      "col": "CANTIDAD"},
+    "Incautación Cocaína":        {"pattern": "INCAUTACION COCAINA",   "col": "CANTIDAD"},
+    "Incautación Marihuana":      {"pattern": "INCAUTACION MARIHUANA", "col": "CANTIDAD"},
 }
+
+def normalizar(texto):
+    return ''.join(c for c in unicodedata.normalize('NFD', texto.upper()) if unicodedata.category(c) != 'Mn')
+
+def buscar_archivo(patron):
+    if not CARPETA.exists(): return None
+    patron_norm = normalizar(patron)
+    for f in CARPETA.glob("*.xlsx"):
+        if patron_norm in normalizar(f.name):
+            return f
+    return None
 
 def leer_datos():
     datos = {}
-    for nombre, cfg in DATASETS.items():
-        ruta = Path(CARPETA) / cfg["file"]
-        if not ruta.exists():
-            print(f"  [AVISO] No se encontro {ruta}")
-            continue
+    print(f"📊 Buscando archivos en {CARPETA.resolve()}...")
+    for nombre, cfg in DATASETS_CONFIG.items():
+        ruta = buscar_archivo(cfg["pattern"])
+        if not ruta: continue
         try:
             df = pd.read_excel(ruta, engine='openpyxl')
             df.columns = [str(c).upper().strip() for c in df.columns]
-            df['COD_MUNI'] = pd.to_numeric(df['COD_MUNI'], errors='coerce')
-            df = df[df['COD_MUNI'] == COD_MUNI].copy()
-            col_fecha = 'FECHA_HECHO' if 'FECHA_HECHO' in df.columns else 'FECHA HECHO'
-            df['FECHA_HECHO'] = pd.to_datetime(df[col_fecha], errors='coerce')
-            df['ANIO'] = df['FECHA_HECHO'].dt.year
-            df['MES']  = df['FECHA_HECHO'].dt.month
-            raw = df[cfg['col']]
+            col_muni = next((c for c in df.columns if any(x in c for x in ["COD_MUNI", "MUNICIPIO", "MPIO"])), None)
+            if not col_muni: continue
+            df[col_muni] = df[col_muni].astype(str).str.strip()
+            df = df[(df[col_muni] == str(COD_MUNI)) | (df[col_muni].str.contains("JAMUNDI", na=False))].copy()
+            if df.empty: continue
+
+            col_fecha = next((c for c in df.columns if any(x in c for x in ["FECHA_HECHO", "FECHA HECHO", "ANIO", "FECHA"])), None)
+            if col_fecha:
+                df['FECHA_HECHO_DT'] = pd.to_datetime(df[col_fecha], errors='coerce')
+                df['ANIO'] = df['FECHA_HECHO_DT'].dt.year
+                df['MES']  = df['FECHA_HECHO_DT'].dt.month
+                if 'ANIO' in df.columns and df['ANIO'].isnull().any():
+                     df['ANIO'] = pd.to_numeric(df[col_fecha].astype(str).str[:4], errors='coerce')
+
+            col_cant = cfg["col"] if cfg["col"] in df.columns else df.columns[-1]
+            raw = df[col_cant]
             if raw.dtype == object:
                 raw = raw.astype(str).str.replace('.', '', regex=False).str.replace(',', '.', regex=False)
             df['col_cantidad'] = pd.to_numeric(raw, errors='coerce').fillna(0)
             datos[nombre] = df
-            print(f"  [OK] {nombre}: {len(df)} filas")
-        except Exception as e:
-            print(f"  [ERROR] {nombre}: {e}")
+            print(f"  [OK] {nombre}: {len(df)} registros")
+        except: pass
     return datos
 
 def total_anio(df, anio, hasta_mes=None):
+    if 'ANIO' not in df.columns: return 0
     sub = df[df['ANIO'] == anio]
-    if hasta_mes:
+    if hasta_mes and 'MES' in df.columns:
         sub = sub[sub['MES'] <= hasta_mes]
     return float(sub['col_cantidad'].sum())
 
-def grafica_comparativa(datos, anio_actual, anio_anterior, hasta_mes=None):
-    delitos  = list(datos.keys())
-    vals_ant = [total_anio(datos[d], anio_anterior, hasta_mes=hasta_mes) for d in delitos]
-    vals_act = [total_anio(datos[d], anio_actual, hasta_mes=hasta_mes)   for d in delitos]
-    fig, ax = plt.subplots(figsize=(13, 5))
-    fig.patch.set_facecolor('#F4F4F8')
-    ax.set_facecolor('#F4F4F8')
-    x = range(len(delitos))
-    w = 0.36
-    ax.bar([i - w/2 for i in x], vals_ant, w, label=str(anio_anterior), color='#606175', alpha=0.85, zorder=3)
-    b2 = ax.bar([i + w/2 for i in x], vals_act, w, label=str(anio_actual), color='#281FD0', alpha=0.92, zorder=3)
-    for bar in b2:
-        h = bar.get_height()
-        if h > 0:
-            ax.text(bar.get_x() + bar.get_width()/2, h + 0.3, str(int(h)), ha='center', va='bottom', fontsize=8, color='#281FD0', fontweight='bold')
-    ax.set_xticks(list(x))
-    ax.set_xticklabels([d.replace(' ', '\n') for d in delitos], fontsize=8.5, color='#1A1A2E')
-    ax.set_ylabel('Casos / kg', fontsize=9, color='#606175')
-    ax.set_title(f'Comparativo ene-{MESES_ES[hasta_mes][:3] if hasta_mes else "Dic"} {anio_anterior} vs {anio_actual}', fontsize=11, fontweight='bold', color='#281FD0', pad=10)
-    ax.legend(fontsize=9, framealpha=0.7)
-    for spine in ['top','right']:
-        ax.spines[spine].set_visible(False)
-    ax.yaxis.grid(True, alpha=0.4, color='#C5C5D2', zorder=0)
-    ax.set_axisbelow(True)
-    ax.axhline(y=0, color='#FFE000', linewidth=2.5, zorder=4)
-    plt.tight_layout()
-    ruta = 'graf_comp.png'
-    plt.savefig(ruta, dpi=150, bbox_inches='tight', facecolor='#F4F4F8')
-    plt.close()
-    return ruta
-
-def grafica_tendencia_smallmultiples(datos, fecha_max, delitos, meses_back=24):
-    fin = pd.Timestamp(fecha_max).to_period("M").to_timestamp("M")
-    ini = (fin.to_period("M") - (meses_back - 1)).to_timestamp("M")
-    meses = pd.period_range(ini.to_period("M"), fin.to_period("M"), freq="M").to_timestamp("M")
-    n = len(delitos)
-    fig = plt.figure(figsize=(10, 5.2))
-    gs = fig.add_gridspec(nrows=n, ncols=1, hspace=0.15)
-    max_y = 0
-    series = {}
-    for d in delitos:
-        df = datos.get(d)
-        if df is None or len(df) == 0:
-            y = [0]*len(meses)
-        else:
-            sub = df.copy()
-            sub = sub[(sub["FECHA_HECHO"] >= ini) & (sub["FECHA_HECHO"] <= fin)]
-            g = (sub.groupby(sub["FECHA_HECHO"].dt.to_period("M"))["col_cantidad"].sum().reindex(meses.to_period("M"), fill_value=0))
-            y = g.values.tolist()
-        y2 = [float(v) for v in y]
-        series[d] = y2
-        max_y = max(max_y, max(y2) if y2 else 0)
-    for i, d in enumerate(delitos):
-        ax = fig.add_subplot(gs[i, 0])
-        y = series[d]
-        ax.plot(meses, y, linewidth=1.8, alpha=0.95)
-        try:
-            ax.text(meses[-1], y[-1], f" {int(round(y[-1]))}", fontsize=8, va="center")
-        except: pass
-        ax.grid(True, linewidth=0.3, alpha=0.25)
-        ax.text(0.01, 0.85, d, transform=ax.transAxes, fontsize=9, fontweight="bold")
-        ax.set_ylim(0, max(1, max_y * 1.05))
-        if i < n - 1: ax.set_xticklabels([])
-        else:
-            ticks = meses[::3]
-            ax.set_xticks(ticks)
-            ax.set_xticklabels([m.strftime("%b-%y") for m in ticks], fontsize=8, rotation=35, ha="right")
-    fig.suptitle(f"Tendencia mensual (últimos {meses_back} meses) — Jamundí", fontsize=11, y=0.98)
-    out = "tendencia_24m.png"
-    fig.tight_layout(rect=[0, 0, 1, 0.96])
-    fig.savefig(out, dpi=160, bbox_inches="tight")
-    plt.close(fig)
-    return str(out)
-
-def fmt_val(nombre, v):
-    if v is None: v = 0
-    if "Incautacion" in nombre or "Incautación" in nombre:
-        try:
-            num = float(v)
-            txt = f"{num:.3f}".rstrip("0").rstrip(".")
-            return f"{txt} kg"
-        except: return f"{v} kg"
-    try: return f"{int(round(float(v)))}"
+def fmt_val(v):
+    try: return f"{int(round(float(v))):,}".replace(",", ".")
     except: return str(v)
 
 def calcular_variacion_estado(v_prev, v_act):
-    if v_prev == 0 and v_act == 0: return "0.0%", "IGUAL"
-    if v_prev == 0 and v_act > 0: return "N/A", "APARECE"
-    if v_prev > 0 and v_act == 0: return "-100.0%", "BAJA"
+    if v_prev == 0: return ("N/A", "NOVEDAD") if v_act > 0 else ("0.0%", "IGUAL")
     var = ((v_act - v_prev) / v_prev) * 100.0
-    return (f"+{var:.1f}%" if var > 0 else f"{var:.1f}%"), ("SUBE" if var > 0 else "BAJA" if var < 0 else "IGUAL")
+    txt = f"{var:+.1f}%"
+    est = "SUBE" if var > 0 else ("BAJA" if var < 0 else "IGUAL")
+    return txt, est
 
-def generar_pdf(datos, ruta_salida):
+# ── Gráficas ──
+def grafica_comparativa(datos, anio_act, anio_ant, hasta_mes):
+    delitos = sorted(datos.keys(), key=lambda d: total_anio(datos[d], anio_act, hasta_mes), reverse=True)[:12]
+    if not delitos: return None
+    v_ant = [total_anio(datos[d], anio_ant, hasta_mes) for d in delitos]
+    v_act = [total_anio(datos[d], anio_act, hasta_mes) for d in delitos]
+    
+    fig, ax = plt.subplots(figsize=(13, 5.5), dpi=140)
+    fig.patch.set_facecolor('#F4F4F8')
+    ax.set_facecolor('#F4F4F8')
+    
+    x = range(len(delitos))
+    w = 0.36
+    ax.bar([i - w/2 for i in x], v_ant, w, label=str(anio_ant), color='#606175', alpha=0.85, zorder=3)
+    bars_act = ax.bar([i + w/2 for i in x], v_act, w, label=str(anio_act), color='#281FD0', alpha=0.92, zorder=3)
+    
+    y_max = max(max(v_act) if v_act else 0, max(v_ant) if v_ant else 0, 1)
+    for i, (bar, va, vb) in enumerate(zip(bars_act, v_ant, v_act)):
+        if vb > 0:
+            ax.text(bar.get_x() + bar.get_width()/2, vb + y_max*0.02, fmt_val(vb), 
+                    ha='center', va='bottom', fontsize=8, color='#281FD0', fontweight='bold')
+
+    ax.set_xticks(list(x))
+    ax.set_xticklabels([d for d in delitos], rotation=30, ha="right", fontsize=8.5)
+    ax.set_title(f"COMPARATIVO ENE-{MESES_ES[hasta_mes][:3].upper()} {anio_ant} vs {anio_act}", fontsize=11, fontweight='bold', color='#281FD0', pad=15)
+    ax.legend(fontsize=9, frameon=False)
+    ax.yaxis.grid(True, alpha=0.4, color='#C5C5D2', zorder=0)
+    for spine in ['top','right']: ax.spines[spine].set_visible(False)
+    
+    plt.tight_layout()
+    out = "graf_comp_mindefensa.png"
+    plt.savefig(out, facecolor='#F4F4F8')
+    plt.close()
+    return out
+
+def grafica_tendencia(datos, anio_act):
+    plt.figure(figsize=(10, 3.5), dpi=140)
+    plt.gca().set_facecolor('#F4F4F8')
+    delitos_top = sorted(datos.keys(), key=lambda d: total_anio(datos[d], anio_act), reverse=True)[:5]
+    if not delitos_top: return None
+    for d in delitos_top:
+        df = datos[d]
+        if 'ANIO' in df.columns and 'MES' in df.columns:
+            s = df.groupby(["ANIO", "MES"])["col_cantidad"].sum().tail(24)
+            if not s.empty:
+                plt.plot(range(len(s)), s.values, marker="o", label=d, linewidth=2)
+    plt.title("TENDENCIA HISTÓRICA — TOP 5 INDICADORES", fontweight="bold", color="#281FD0")
+    plt.legend(fontsize=7, loc="upper left", frameon=False)
+    plt.grid(True, alpha=0.2)
+    out = "graf_tend_mindefensa.png"
+    plt.tight_layout()
+    plt.savefig(out, facecolor='#F4F4F8')
+    plt.close()
+    return out
+
+# ── PDF ──
+def generar_pdf(datos):
     hoy = datetime.now()
-    anio_actual = hoy.year
-    anio_anterior = anio_actual - 1
-    fecha_max = max(df['FECHA_HECHO'].max() for df in datos.values())
-    mes_actual = (fecha_max.month - 1 if fecha_max.day < 25 and fecha_max.month > 1 else 12 if fecha_max.day < 25 else fecha_max.month)
-    mes_nombre = MESES_ES[mes_actual]
-    doc = SimpleDocTemplate(ruta_salida, pagesize=A4, leftMargin=1.8*cm, rightMargin=1.8*cm, topMargin=1.2*cm, bottomMargin=1.5*cm)
-    W = A4[0] - 3.6*cm
-    estilos = getSampleStyleSheet()
-    def E(n, **kw): return ParagraphStyle(n, parent=estilos['Normal'], **kw)
-    historia = []
-    bloque_nombre = Table([[Paragraph("ALCALDÍA DE JAMUNDÍ", E('i', fontSize=15, fontName='Helvetica-Bold', textColor=NEGRO))], [Paragraph("VALLE DEL CAUCA", E('d', fontSize=9, textColor=GRIS))], [Spacer(1,3)], [Paragraph(f"Observatorio del Delito — Boletín {mes_nombre} {anio_actual}", E('o', fontSize=9, fontName='Helvetica-Bold', textColor=AZUL_CLARO))]], colWidths=[W*0.62])
-    bloque_fecha = Table([[Paragraph(hoy.strftime('%d/%m/%Y %H:%M'), E('f1', fontSize=8, textColor=GRIS, alignment=TA_RIGHT))], [Paragraph("Secretaría de Seguridad y Convivencia", E('f2', fontSize=7.5, textColor=GRIS, alignment=TA_RIGHT))], [Paragraph("Fuente: Ministerio de Defensa Nacional", E('f3', fontSize=7.5, textColor=GRIS, alignment=TA_RIGHT))]], colWidths=[W*0.38])
-    enc_data = [[Image(ESCUDO, width=1.4*cm, height=1.9*cm) if os.path.exists(ESCUDO) else "", bloque_nombre, bloque_fecha]]
-    historia.append(Table(enc_data, colWidths=[1.7*cm, W*0.60, W*0.40 - 1.7*cm] if os.path.exists(ESCUDO) else [W*0.62, W*0.38]))
-    historia.append(Spacer(1, 0.4*cm))
-    historia.append(Paragraph("RESUMEN EJECUTIVO", E('h2', fontSize=11, fontName='Helvetica-Bold', textColor=AZUL)))
-    historia.append(HRFlowable(width=W, thickness=2, color=AMARILLO))
-    historia.append(Spacer(1, 0.2*cm))
-    def TH(t): return Paragraph(f"<b>{t}</b>", E('th', fontSize=8, fontName='Helvetica-Bold', textColor=colors.white, alignment=TA_CENTER))
-    def TD(t, bold=False, clr=NEGRO, align=TA_LEFT): return Paragraph(f"<b>{t}</b>" if bold else str(t), E('td', fontSize=8.5, textColor=clr, alignment=align))
-    filas = [[TH("Delito"), TH(str(anio_anterior)), TH(str(anio_actual)), TH("Variación"), TH("Estado")]]
-    for nombre, df in datos.items():
-        ant, act = total_anio(df, anio_anterior, hasta_mes=mes_actual), total_anio(df, anio_actual, hasta_mes=mes_actual)
-        var_txt, estado_txt = calcular_variacion_estado(ant, act)
-        clr_v = ROJO_ALT if (act-ant) > 0 else (VERDE if (act-ant) < 0 else GRIS)
-        filas.append([TD(nombre), TD(fmt_val(nombre, ant), align=TA_CENTER), TD(fmt_val(nombre, act), bold=True, align=TA_CENTER), TD(var_txt, clr=clr_v, align=TA_CENTER, bold=True), TD(estado_txt, clr=clr_v, align=TA_CENTER, bold=True)])
-    tabla_res = Table(filas, colWidths=[W*0.38, W*0.13, W*0.13, W*0.20, W*0.16], repeatRows=1)
-    tabla_res.setStyle(TableStyle([('BACKGROUND', (0,0),(-1,0), AZUL), ('ROWBACKGROUNDS',(0,1),(-1,-1), [colors.white, GRIS_FONDO]), ('GRID', (0,0),(-1,-1), 0.4, colors.HexColor('#C5C5D2')), ('ROWPADDING', (0,0),(-1,-1), 7), ('VALIGN', (0,0),(-1,-1), 'MIDDLE'), ('LINEBELOW', (0,0),(-1,0), 2.5, AMARILLO)]))
-    historia.append(tabla_res)
-    historia.append(Spacer(1, 0.5*cm))
-    historia.append(Paragraph("COMPARATIVO ANUAL POR DELITO", E('h3', fontSize=11, fontName='Helvetica-Bold', textColor=AZUL)))
-    historia.append(HRFlowable(width=W, thickness=2, color=AMARILLO))
-    try: historia.append(Image(grafica_comparativa(datos, anio_actual, anio_anterior, hasta_mes=mes_actual), width=W, height=W*0.38))
-    except Exception as e: historia.append(Paragraph(f"Grafica no disponible: {e}", E('err', fontSize=8)))
-    historia.append(Spacer(1, 0.4*cm))
-    historia.append(Paragraph("TENDENCIA MENSUAL — DELITOS PRIORITARIOS", E('h4', fontSize=11, fontName='Helvetica-Bold', textColor=AZUL)))
-    historia.append(HRFlowable(width=W, thickness=2, color=AMARILLO))
-    try:
-        delitos_prio = [d for d in ['Homicidio Intencional','Lesiones Comunes','Violencia Intrafamiliar'] if d in datos]
-        if delitos_prio: historia.append(Image(grafica_tendencia_smallmultiples(datos, fecha_max, delitos_prio, meses_back=24), width=W, height=W*0.55))
-    except Exception as e: historia.append(Paragraph(f"Grafica no disponible: {e}", E('err2', fontSize=8)))
-    doc.build(historia)
-    print(f"\n REPORTE GENERADO: {ruta_salida}")
+    anio_act = hoy.year
+    anio_ant = anio_act - 1
+    # Determinar último mes con datos
+    meses_con_datos = []
+    for df in datos.values():
+        if 'MES' in df.columns:
+            mes_max = df[df['ANIO'] == anio_act]['MES'].max()
+            if pd.notnull(mes_max): meses_con_datos.append(mes_max)
+    mes_actual = int(max(meses_con_datos)) if meses_con_datos else hoy.month
 
-if __name__ == '__main__':
-    print("=" * 60); print("OBSERVATORIO DEL DELITO — ALCALDIA DE JAMUNDI"); print("=" * 60)
-    datos = leer_datos()
-    if not datos: print("No se encontraron datos."); sys.exit(1)
-    generar_pdf(datos, sys.argv[1] if len(sys.argv) > 1 else SALIDA)
+    doc = SimpleDocTemplate(SALIDA, pagesize=A4, leftMargin=1.8*cm, rightMargin=1.8*cm, topMargin=1.2*cm, bottomMargin=1.5*cm)
+    W = A4[0] - 3.6*cm
+    h = []
+    
+    def P(txt, sz=9, b=False, c=NEGRO, a=TA_LEFT):
+        return Paragraph(txt, ParagraphStyle("n", fontSize=sz, fontName="Helvetica-Bold" if b else "Helvetica", textColor=c, alignment=a))
+
+    # Encabezado Institucional
+    bloque_izq = Table([
+        [P("ALCALDÍA DE JAMUNDÍ", 15, True)],
+        [P("VALLE DEL CAUCA", 9, False, GRIS)],
+        [Spacer(1,3)],
+        [P(f"Observatorio del Delito — Boletín MinDefensa {MESES_ES[mes_actual]} {anio_act}", 9, True, AZUL)],
+    ], colWidths=[W*0.62])
+    
+    bloque_der = Table([
+        [P(datetime.now().strftime("%d/%m/%Y %H:%M"), 8, False, GRIS, TA_RIGHT)],
+        [P("Secretaría de Seguridad y Convivencia", 7.5, False, GRIS, TA_RIGHT)],
+        [P("Fuente: Ministerio de Defensa Nacional", 7.5, False, GRIS, TA_RIGHT)],
+    ], colWidths=[W*0.38])
+
+    enc = Table([[Image(ESCUDO, 1.4*cm, 1.9*cm) if Path(ESCUDO).exists() else "", bloque_izq, bloque_der]], colWidths=[1.7*cm, W*0.58, W*0.35])
+    enc.setStyle(TableStyle([('VALIGN',(0,0),(-1,-1),'MIDDLE'), ('LEFTPADDING',(0,0),(-1,-1),0)]))
+    h.append(enc)
+
+    tl = Table([['','']], colWidths=[W*0.18, W*0.82])
+    tl.setStyle(TableStyle([('BACKGROUND',(0,0),(0,0),AMARILLO), ('BACKGROUND',(1,0),(1,0),AZUL), ('ROWPADDING',(0,0),(-1,-1),3)]))
+    h.append(tl)
+    h.append(Spacer(1, 0.4*cm))
+
+    # Resumen Ejecutivo
+    h.append(P("RESUMEN EJECUTIVO", 11, True, AZUL))
+    h.append(HRFlowable(width=W, thickness=2, color=AMARILLO))
+    h.append(Spacer(1, 0.2*cm))
+
+    filas = [[P("Indicador",8,True,colors.white,TA_CENTER), P("Corte",8,True,colors.white,TA_CENTER), P(str(anio_ant),8,True,colors.white,TA_CENTER), P(str(anio_act),8,True,colors.white,TA_CENTER), P("Variación",8,True,colors.white,TA_CENTER), P("Estado",8,True,colors.white,TA_CENTER)]]
+    for d, df in sorted(datos.items(), key=lambda x: total_anio(x[1], anio_act, mes_actual), reverse=True):
+        ant, act = total_anio(df, anio_ant, mes_actual), total_anio(df, anio_act, mes_actual)
+        v, e = calcular_variacion_estado(ant, act)
+        
+        # Obtener última fecha de este delito
+        corte_str = "—"
+        if 'FECHA_HECHO_DT' in df.columns:
+            f_max = df['FECHA_HECHO_DT'].max()
+            if pd.notnull(f_max):
+                corte_str = f_max.strftime("%d/%m/%y")
+
+        clr = ROJO_ALT if e in ("SUBE", "NOVEDAD") else (VERDE if e == "BAJA" else GRIS)
+        filas.append([
+            P(d,8), 
+            P(corte_str, 8, False, GRIS, TA_CENTER),
+            P(fmt_val(ant),8,False,NEGRO,TA_CENTER), 
+            P(fmt_val(act),8,True,NEGRO,TA_CENTER), 
+            P(v,8,True,clr,TA_CENTER), 
+            P(e,8,True,clr,TA_CENTER)
+        ])
+
+    t = Table(filas, colWidths=[W*0.28, W*0.13, W*0.11, W*0.11, W*0.19, W*0.18])
+    t.setStyle(TableStyle([('BACKGROUND',(0,0),(-1,0),AZUL), ('ROWBACKGROUNDS',(0,1),(-1,-1),[colors.white, GRIS_FONDO]), ('GRID',(0,0),(-1,-1),0.4,colors.HexColor('#C5C5D2')), ('ROWPADDING',(0,0),(-1,-1),7), ('LINEBELOW',(0,0),(-1,0),2.5,AMARILLO)]))
+    h.append(t)
+    h.append(Spacer(1, 0.6*cm))
+
+    # Gráficas
+    g_comp = grafica_comparativa(datos, anio_act, anio_ant, mes_actual)
+    if g_comp:
+        h.append(P("COMPARATIVO ANUAL POR INDICADOR", 11, True, AZUL))
+        h.append(HRFlowable(width=W, thickness=2, color=AMARILLO))
+        h.append(Spacer(1, 0.15*cm))
+        h.append(Image(g_comp, width=W, height=W*0.38))
+        h.append(Spacer(1, 0.6*cm))
+        
+    g_tend = grafica_tendencia(datos, anio_act)
+    if g_tend:
+        h.append(P("TENDENCIA HISTÓRICA — INDICADORES PRIORITARIOS", 11, True, AZUL))
+        h.append(HRFlowable(width=W, thickness=2, color=AMARILLO))
+        h.append(Spacer(1, 0.15*cm))
+        h.append(Image(g_tend, width=W, height=W*0.35))
+
+    # Pie
+    h.append(Spacer(1, 0.6*cm))
+    pie = Table([[P("ALCALDÍA DE JAMUNDÍ — SECRETARÍA DE SEGURIDAD Y CONVIVENCIA", 7.5, True, colors.white, TA_CENTER)], [P("Fuente: Ministerio de Defensa Nacional · Municipio: Jamundí (76364) · Generado automáticamente vía GitHub Actions", 7, False, colors.white, TA_CENTER)]], colWidths=[W])
+    pie.setStyle(TableStyle([('BACKGROUND',(0,0),(-1,-1),AZUL), ('ROWPADDING',(0,0),(-1,-1),7), ('LINEABOVE',(0,0),(-1,0),3,AMARILLO)]))
+    h.append(pie)
+
+    doc.build(h)
+    print(f"✅ Reporte generado: {SALIDA}")
+    
+    # Exportar totales y fechas de corte para el correo
+    resumen = {}
+    for d, df in datos.items():
+        corte = "—"
+        if 'FECHA_HECHO_DT' in df.columns:
+            f_max = df['FECHA_HECHO_DT'].max()
+            if pd.notnull(f_max):
+                corte = f_max.strftime("%d/%b/%y")
+        resumen[d] = {
+            "valor": int(total_anio(df, anio_act, mes_actual)),
+            "corte": corte
+        }
+    
+    with open("resumen_actual.json", "w", encoding="utf-8") as f:
+        json.dump(resumen, f, ensure_ascii=False, indent=2)
+
+if __name__ == "__main__":
+    d = leer_datos()
+    if d: generar_pdf(d)
+    else: print("❌ No se encontraron datos para generar el PDF")

@@ -61,6 +61,28 @@ def enviar_resumen():
     fecha_hoy = datetime.now().strftime("%d/%m/%Y %H:%M")
     mes_actual = MESES_ES[datetime.now().month]
 
+    # Cargar detalle con fechas de corte
+    filas_tabla_html = ""
+    RESUMEN_FILE = Path("resumen_actual.json")
+    if RESUMEN_FILE.exists():
+        try:
+            with open(RESUMEN_FILE, encoding="utf-8") as f:
+                resumen_data = json.load(f)
+            # Mostrar top 5 delitos por volumen
+            top_delitos = sorted(resumen_data.items(), key=lambda x: x[1]['valor'], reverse=True)[:5]
+            for nombre, d in top_delitos:
+                filas_tabla_html += f"""
+                <tr>
+                  <td style="padding:8px 10px;border-bottom:1px solid #eee"><b>{nombre}</b></td>
+                  <td style="padding:8px 10px;border-bottom:1px solid #eee;text-align:center;color:#606175">{d['corte']}</td>
+                  <td style="padding:8px 10px;border-bottom:1px solid #eee;text-align:center;font-weight:bold;color:#281FD0">{d['valor']:,}</td>
+                </tr>
+                """
+        except: 
+            filas_tabla_html = "<tr><td colspan='3' style='padding:10px;text-align:center'>Error al cargar detalle</td></tr>"
+    else:
+        filas_tabla_html = "<tr><td colspan='3' style='padding:10px;text-align:center'>No hay detalle disponible</td></tr>"
+
     tipo = tipo_envio()
     asunto, titulo, descripcion = asunto_y_titulo(tipo, fecha_hoy)
 
@@ -92,7 +114,7 @@ def enviar_resumen():
         <h2 style="color:#281FD0;font-size:16px;margin:0 0 8px">{titulo}</h2>
         <p style="color:#606175;font-size:13px;margin:0 0 20px">{descripcion}</p>
 
-        <!-- Stats -->
+        <!-- Stats Globales -->
         <table style="width:100%;border-collapse:collapse;margin-bottom:20px">
           <tr>
             <td style="background:#f4f4f8;padding:12px;border-radius:4px;text-align:center;width:33%">
@@ -111,6 +133,18 @@ def enviar_resumen():
             </td>
           </tr>
         </table>
+
+        <!-- Detalle de Delitos con Corte -->
+        <h3 style="color:#281FD0;font-size:13px;margin:20px 0 10px;text-transform:uppercase;letter-spacing:1px">Resumen de Indicadores (Jamundí)</h3>
+        <table style="width:100%;border-collapse:collapse;font-size:12px;background:#f8f9fa;border-radius:8px">
+          <tr style="background:#e9ecef">
+            <th style="padding:10px;text-align:left;border-bottom:2px solid #dee2e6">Delito</th>
+            <th style="padding:10px;text-align:center;border-bottom:2px solid #dee2e6">Corte</th>
+            <th style="padding:10px;text-align:center;border-bottom:2px solid #dee2e6">Casos</th>
+          </tr>
+          {filas_tabla_html}
+        </table>
+        <p style="font-size:11px;color:#858796;margin-top:10px"><i>* Las fechas reflejan el último registro reportado oficialmente.</i></p>
 
         <p style="color:#606175;font-size:12px">
           <b>Última revisión:</b> {ultima[:19] if ultima != "—" else "—"}<br>
