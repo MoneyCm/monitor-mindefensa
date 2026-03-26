@@ -1,4 +1,4 @@
-﻿from playwright.sync_api import sync_playwright
+from playwright.sync_api import sync_playwright
 import json, requests, pandas as pd, time, unicodedata
 from datetime import datetime
 from pathlib import Path
@@ -31,7 +31,7 @@ def obtener_token():
     try:
         resp = requests.post(
             f"{SISC_BASE}/auth/login",
-            data={"username": admin_sisc, "password": admin_pasword},
+            data={"username": SISC_USUARIO, "password": SISC_PASSWORD},
             timeout=15
         )
         if resp.status_code == 200:
@@ -212,9 +212,16 @@ def main():
     # FASE 4: análisis Jamundí
     print("\nFASE 4: Análisis Jamundí...")
     ARCHIVOS_INTERES = {
-        "HOMICIDIO INTENCIONAL","SECUESTRO","EXTORSION",
-        "HURTO PERSONAS","VIOLENCIA INTRAFAMILIAR",
-        "DELITOS INFORMATICOS","TERRORISMO","MASACRES"
+        "HOMICIDIO INTENCIONAL", "SECUESTRO", "EXTORSION",
+        "HURTO PERSONAS", "HURTO A PERSONAS", "VIOLENCIA INTRAFAMILIAR",
+        "DELITOS INFORMATICOS", "TERRORISMO", "MASACRES",
+        "LESIONES COMUNES", "DELITOS SEXUALES", "AFECTACION FUERZA PUBLICA",
+        "PIRATERIA TERRESTRE", "TRATA DE PERSONAS", "INVASION DE TIERRAS",
+        "HURTO A RESIDENCIAS", "HURTO DE VEHICULOS", "HURTO A COMERCIO",
+        "INCAUTACION COCAINA", "INCAUTACION MARIHUANA",
+        "HOMICIDIO ACCIDENTES DE TRANSITO", "LESIONES ACCIDENTES DE TRANSITO",
+        "DELITOS CONTRA EL MEDIO AMBIENTE", "CAPTURAS POR MINERIA ILEGAL",
+        "INCAUTACIONES MINERIA", "INCAUTACION ORO Y MERCURIO", "MINAS INTERVENIDAS"
     }
     for xlsx in sorted(DOWNLOAD_DIR.glob("*.xlsx")):
         base_norm = ''.join(c for c in unicodedata.normalize('NFD', xlsx.stem.upper()) if unicodedata.category(c) != 'Mn')

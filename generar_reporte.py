@@ -43,16 +43,17 @@ DATASETS_CONFIG = {
     "Extorsión":                  {"pattern": "EXTORSION",             "col": "CANTIDAD"},
     "Terrorismo":                 {"pattern": "TERRORISMO",            "col": "CANTIDAD"},
     "Masacres":                   {"pattern": "MASACRES",              "col": "VICTIMAS"},
-    "Afectación Fuerza Pública":  {"pattern": "AFECTACION FUERZA PUBLICA", "col": "CANTIDAD"},
-    "Piratería Terrestre":        {"pattern": "PIRATERIA TERRESTRE",   "col": "CANTIDAD"},
-    "Trata de Personas":          {"pattern": "TRATA DE PERSONAS",     "col": "CANTIDAD"},
-    "Invasión de Tierras":        {"pattern": "INVASION DE TIERRAS",   "col": "CANTIDAD"},
     "Hurto a Personas":           {"pattern": "HURTO PERSONAS",        "col": "CANTIDAD"},
     "Hurto a Residencias":        {"pattern": "HURTO A RESIDENCIAS",   "col": "CANTIDAD"},
     "Hurto de Vehículos":         {"pattern": "HURTO DE VEHICULOS",    "col": "CANTIDAD"},
     "Hurto a Comercio":           {"pattern": "HURTO A COMERCIO",      "col": "CANTIDAD"},
-    "Incautación Cocaína":        {"pattern": "INCAUTACION COCAINA",   "col": "CANTIDAD"},
-    "Incautación Marihuana":      {"pattern": "INCAUTACION MARIHUANA", "col": "CANTIDAD"},
+    "Homicidio Tránsito":         {"pattern": "HOMICIDIO ACCIDENTES DE TRANSITO", "col": "VICTIMAS"},
+    "Lesiones Tránsito":          {"pattern": "LESIONES ACCIDENTES DE TRANSITO", "col": "CANTIDAD"},
+    "Delitos Medio Ambiente":     {"pattern": "DELITOS CONTRA EL MEDIO AMBIENTE", "col": "CANTIDAD"},
+    "Capturas Minería":           {"pattern": "CAPTURAS POR MINERIA ILEGAL", "col": "CANTIDAD"},
+    "Incautaciones Minería":      {"pattern": "INCAUTACIONES MINERIA", "col": "CANTIDAD"},
+    "Minería Oro/Mercurio":       {"pattern": "INCAUTACION ORO Y MERCURIO", "col": "CANTIDAD"},
+    "Minas Intervenidas":         {"pattern": "MINAS INTERVENIDAS",    "col": "CANTIDAD"},
 }
 
 def normalizar(texto):
@@ -73,12 +74,22 @@ def leer_datos():
         ruta = buscar_archivo(cfg["pattern"])
         if not ruta: continue
         try:
-            df = pd.read_excel(ruta, engine='openpyxl')
+            # MinDefensa Excel files often have 3-5 rows of preamble before the header
+            df_full = pd.read_excel(ruta, engine='openpyxl', header=None, nrows=10)
+            header_row = 0
+            for i, row in df_full.iterrows():
+                row_vals = [str(v).upper() for v in row.dropna()]
+                if any(x in " ".join(row_vals) for x in ["COD_MUNI", "MUNICIPIO", "MPIO", "FECHA"]):
+                    header_row = i
+                    break
+            
+            df = pd.read_excel(ruta, engine='openpyxl', skiprows=header_row)
             df.columns = [str(c).upper().strip() for c in df.columns]
             col_muni = next((c for c in df.columns if any(x in c for x in ["COD_MUNI", "MUNICIPIO", "MPIO"])), None)
             if not col_muni: continue
             df[col_muni] = df[col_muni].astype(str).str.strip()
-            df = df[(df[col_muni] == str(COD_MUNI)) | (df[col_muni].str.contains("JAMUNDI", na=False))].copy()
+            # Filtro por código o nombre
+            df = df[(df[col_muni] == str(COD_MUNI)) | (df[col_muni].str.upper().str.contains("JAMUNDI", na=False))].copy()
             if df.empty: continue
 
             col_fecha = next((c for c in df.columns if any(x in c for x in ["FECHA_HECHO", "FECHA HECHO", "ANIO", "FECHA"])), None)
