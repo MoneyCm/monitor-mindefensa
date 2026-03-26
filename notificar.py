@@ -111,8 +111,9 @@ def enviar_resumen():
 
       <!-- Contenido -->
       <div style="padding:20px 28px">
-        <h2 style="color:#281FD0;font-size:16px;margin:0 0 8px">{titulo}</h2>
-        <p style="color:#606175;font-size:13px;margin:0 0 20px">{descripcion}</p>
+        <h2 style="color:#281FD0;font-size:16px;margin:0 0 8px">Cordial saludo, Sr. Secretario de Seguridad y Equipo de la Secretaría</h2>
+        <p style="color:#606175;font-size:13px;margin:0 0 20px">Por medio de la presente, presento el <b>Boletín de Seguimiento de Indicadores de Seguridad</b> generado automáticamente a partir de las últimas actualizaciones de la plataforma oficial de MinDefensa (con fecha de corte 24 de marzo de 2026).</p>
+        <p style="color:#606175;font-size:13px;margin:0 0 20px">A continuación, presentamos los indicadores prioritarios para el municipio de Jamundí en el periodo analizado:</p>
 
         <!-- Stats Globales -->
         <table style="width:100%;border-collapse:collapse;margin-bottom:20px">
@@ -152,6 +153,11 @@ def enviar_resumen():
         </p>
 
         {"<p style='color:#2E7D32;font-weight:bold;font-size:13px'>✅ Se adjunta el boletín PDF con el análisis completo.</p>" if REPORTE_PDF.exists() else ""}
+        <br>
+        <p style="color:#606175;font-size:13px;margin:0">Atentamente,</p>
+        <p style="color:#281FD0;font-size:14px;margin:0;font-weight:bold">César Forero</p>
+        <p style="color:#606175;font-size:12px;margin:0">Observatorio del Delito</p>
+        <p style="color:#606175;font-size:12px;margin:0">Secretaría de Seguridad y Convivencia</p>
       </div>
 
       <!-- Footer -->
@@ -168,7 +174,7 @@ def enviar_resumen():
     msg = MIMEMultipart("mixed")
     msg["Subject"] = asunto
     msg["From"]    = CORREO
-    msg["To"]      = CORREO
+    msg["To"]      = f"{CORREO}, secretaria.seguridad@jamundi.gov.co"
     msg.attach(MIMEText(html, "html"))
 
     # Adjuntar PDF si existe
@@ -186,8 +192,9 @@ def enviar_resumen():
 
     with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
         server.login(CORREO, PASSWD)
-        server.sendmail(CORREO, CORREO, msg.as_string())
-    print(f"Correo enviado a {CORREO} [{tipo}]")
+        destinatarios = [CORREO, "secretaria.seguridad@jamundi.gov.co"]
+        server.sendmail(CORREO, destinatarios, msg.as_string())
+    print(f"Correo enviado a {destinatarios} [{tipo}]")
 
 if __name__ == "__main__":
     enviar_resumen()
