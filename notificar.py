@@ -111,7 +111,7 @@ def enviar_resumen():
 
       <!-- Contenido -->
       <div style="padding:20px 28px">
-        <h2 style="color:#281FD0;font-size:16px;margin:0 0 8px">Cordial saludo, Sr. Secretario de Seguridad y Equipo de la Secretaría</h2>
+        <h2 style="color:#281FD0;font-size:16px;margin:0 0 8px">Cordial saludo, Dra. Carolina Obando - Secretaria de Seguridad y Equipo de la Secretaría</h2>
         <p style="color:#606175;font-size:13px;margin:0 0 20px">Por medio de la presente, presento el <b>Boletín de Seguimiento de Indicadores de Seguridad</b> generado a partir de las últimas actualizaciones de la plataforma oficial de MinDefensa (con fecha de corte 24 de marzo de 2026).</p>
         <p style="color:#606175;font-size:13px;margin:0 0 20px">A continuación, presentamos los indicadores prioritarios para el municipio de Jamundí en el periodo analizado:</p>
 
