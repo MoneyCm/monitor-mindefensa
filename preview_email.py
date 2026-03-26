@@ -62,7 +62,7 @@ def generar_preview():
 
       <!-- Contenido -->
       <div style="padding:20px 28px">
-        <h2 style="color:#281FD0;font-size:16px;margin:0 0 8px">Cordial saludo, Dra. Carolina Obando - Secretaria de Seguridad</h2>
+        <h2 style="color:#281FD0;font-size:16px;margin:0 0 8px">Cordial saludo, Secretaría de Seguridad y Equipo de la Secretaría</h2>
         <p style="color:#606175;font-size:13px;margin:0 0 20px">{descripcion}</p>
 
         <!-- Stats Globales -->
