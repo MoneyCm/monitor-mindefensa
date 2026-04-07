@@ -58,6 +58,12 @@ def enviar_resumen():
     total    = len(estado.get("archivos", {}))
     nuevos   = estado.get("nuevos_ultimo", 0)
     cambios  = estado.get("cambios_ultimo", 0)
+    tipo = tipo_envio()
+
+    # Si es tipo "cambio" (automático diario) y no hay nada nuevo ni cambiado, NO enviar
+    if tipo == "cambio" and nuevos == 0 and cambios == 0:
+        print("DEBUG: tipo 'cambio' detectado pero no hay novedades reales. Abortando envío.")
+        return
     fecha_hoy = datetime.now().strftime("%d/%m/%Y %H:%M")
     mes_actual = MESES_ES[datetime.now().month]
 
@@ -83,7 +89,7 @@ def enviar_resumen():
     else:
         filas_tabla_html = "<tr><td colspan='3' style='padding:10px;text-align:center'>No hay detalle disponible</td></tr>"
 
-    tipo = tipo_envio()
+    # tipo ya fue calculado arriba
     asunto, titulo, descripcion = asunto_y_titulo(tipo, fecha_hoy)
 
     # Badge color según tipo

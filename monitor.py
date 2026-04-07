@@ -1,5 +1,5 @@
 from playwright.sync_api import sync_playwright
-import json, requests, pandas as pd, time, unicodedata
+import json, requests, pandas as pd, time, unicodedata, os
 from datetime import datetime
 from pathlib import Path
 
@@ -126,20 +126,34 @@ def main():
     if STATE_FILE.exists():
         with open(STATE_FILE, encoding="utf-8") as f:
             estado = json.load(f)
-    previos    = estado.get("archivos", {})
-    nuevos     = [a for a in unicos if a["nombre"] not in previos]
-    con_cambio = [a for a in unicos if a["nombre"] in previos and
-                  a["fecha"] != previos[a["nombre"]].get("fecha","")]
+    
+    previos = estado.get("archivos", {})
+    
+    # Normalizar previos para comparación robusta
+    previos_norm = {k.upper().strip(): v for k, v in previos.items()}
+    
+    nuevos = []
+    con_cambio = []
+    
+    for a in unicos:
+        nombre = a["nombre"]
+        clave = nombre.upper().strip()
+        
+        if clave not in previos_norm:
+            nuevos.append(a)
+            print(f"      [NUEVO] {nombre}")
+        else:
+            fecha_act = a["fecha"]
+            fecha_prev = previos_norm[clave].get("fecha")
+            if fecha_act != fecha_prev:
+                con_cambio.append(a)
+                print(f"      [CAMBIO] {nombre}")
+                # print(f"         Prev: {fecha_prev}")
+                # print(f"         Act:  {fecha_act}")
 
     sin_cambio = len(unicos) - len(nuevos) - len(con_cambio)
-
-    import os as _os
-    _hay = (len(nuevos) + len(con_cambio)) > 0
-    _out = _os.environ.get('GITHUB_OUTPUT', '/dev/null')
-    open(_out, 'a', encoding='utf-8').write('hay_cambios=' + str(_hay).lower() + chr(10))
     print(f"   Nuevos: {len(nuevos)}  |  Actualizados: {len(con_cambio)}  |  Sin cambios: {sin_cambio}")
-    import os as _os
-    force_all = _os.environ.get("FORCE_DOWNLOAD_ALL", "").lower() in ("1","true","yes")
+    force_all = os.environ.get("FORCE_DOWNLOAD_ALL", "").lower() in ("1","true","yes")
     para_descargar = (nuevos + con_cambio)[:42]  # cambios
     if force_all:
         # Para reportes programados / manuales: descargar todo aunque no haya cambios
@@ -196,11 +210,15 @@ def main():
     gh_out = os.environ.get('GITHUB_OUTPUT', '')
     if gh_out:
         with open(gh_out, 'a', encoding='utf-8') as _f:
-            _f.write(f'hay_cambios={str(hay_cambios_bool).lower()}')
+            _f.write(f'hay_cambios={str(hay_cambios_bool).lower()}\n')
+            _f.write(f'nuevos={len(nuevos)}\n')
+            _f.write(f'actualizados={len(con_cambio)}\n')
 
     # FASE 5: guardar estado
     print("\nFASE 5: Guardando estado...")
     estado["ultima_revision"] = datetime.now().isoformat()
+    estado["nuevos_ultimo"] = len(nuevos)
+    estado["cambios_ultimo"] = len(con_cambio)
     estado["archivos"] = {a["nombre"]: {"fecha": a["fecha"], "id": a["id"]} for a in unicos}
     with open(STATE_FILE, "w", encoding="utf-8") as f:
         json.dump(estado, f, indent=2, ensure_ascii=False)

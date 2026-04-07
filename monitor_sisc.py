@@ -168,10 +168,22 @@ def main():
     if STATE_FILE.exists():
         with open(STATE_FILE, encoding="utf-8") as f:
             estado = json.load(f)
-    previos    = estado.get("archivos", {})
-    nuevos     = [a for a in unicos if a["nombre"] not in previos]
-    con_cambio = [a for a in unicos if a["nombre"] in previos and
-                  a["fecha"] != previos[a["nombre"]].get("fecha","")]
+    
+    previos = estado.get("archivos", {})
+    previos_norm = {k.upper().strip(): v for k, v in previos.items()}
+    
+    nuevos = []
+    con_cambio = []
+    
+    for a in unicos:
+        nombre = a["nombre"]
+        clave = nombre.upper().strip()
+        if clave not in previos_norm:
+            nuevos.append(a)
+        else:
+            if a["fecha"] != previos_norm[clave].get("fecha"):
+                con_cambio.append(a)
+
     sin_cambio = len(unicos) - len(nuevos) - len(con_cambio)
     print(f"   Nuevos: {len(nuevos)}  |  Actualizados: {len(con_cambio)}  |  Sin cambios: {sin_cambio}")
 
@@ -234,6 +246,8 @@ def main():
     # FASE 5: guardar estado
     print("\nFASE 5: Guardando estado...")
     estado["ultima_revision"] = datetime.now().isoformat()
+    estado["nuevos_ultimo"] = len(nuevos)
+    estado["cambios_ultimo"] = len(con_cambio)
     estado["archivos"] = {a["nombre"]: {"fecha": a["fecha"], "id": a["id"]} for a in unicos}
     estado["ultima_ingesta_sisc"] = {
         "fecha": datetime.now().isoformat(),
