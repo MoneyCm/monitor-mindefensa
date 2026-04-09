@@ -6,10 +6,9 @@ policia_xlsx/
 
 # Estado y logs
 *.json
-*.txt
-*.log
 !resumen_anterior.json
 !resumen_actual.json
+!mindefensa_state.json
 
 # Entorno y cache
 __pycache__/

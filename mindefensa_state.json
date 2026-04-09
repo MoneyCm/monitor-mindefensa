@@ -1,0 +1,307 @@
+{
+  "ultima_revision": "2026-04-09T09:29:28.175135",
+  "archivos": {
+    "DELITOS CONTRA EL MEDIO AMBIENTE.xlsx": {
+      "fecha": {
+        "value": "2026-03-24T23:01:20.971Z",
+        "timezone": "UTC"
+      },
+      "id": "CONT8A90C91C09374BC0BBD44108E631B2B1"
+    },
+    "SECUESTRO.xlsx": {
+      "fecha": {
+        "value": "2026-03-25T00:06:10.331Z",
+        "timezone": "UTC"
+      },
+      "id": "CONTDC54E523A2BA492AA1C57065A0D3C6D8"
+    },
+    "TRATA DE PERSONAS Y TRÁFICO DE MIGRANTES.xlsx": {
+      "fecha": {
+        "value": "2026-03-25T00:06:34.008Z",
+        "timezone": "UTC"
+      },
+      "id": "CONT03B8C922E3C54A1698E6FE92BDA66FB4"
+    },
+    "PUENTES Y VÍAS.xlsx": {
+      "fecha": {
+        "value": "2026-03-25T00:13:07.100Z",
+        "timezone": "UTC"
+      },
+      "id": "CONT19B22F2F695A4CDD8EFE44B2A88A8AFE"
+    },
+    "TERRORISMO.xlsx": {
+      "fecha": {
+        "value": "2026-03-25T00:12:28.916Z",
+        "timezone": "UTC"
+      },
+      "id": "CONTDF4D607F36A147BBAD763111C365256E"
+    },
+    "VOLADURA DE OLEODUCTOS.xlsx": {
+      "fecha": {
+        "value": "2026-03-25T00:13:36.563Z",
+        "timezone": "UTC"
+      },
+      "id": "CONTA4D0847400934551B61A93D9C6B0E521"
+    },
+    "AFECTACIÓN A LA FUERZA PÚBLICA.xlsx": {
+      "fecha": {
+        "value": "2026-03-25T00:28:21.722Z",
+        "timezone": "UTC"
+      },
+      "id": "CONT9DC8FFA70F73409DBD3B60EBAF72A7C3"
+    },
+    "DELITOS SEXUALES.xlsx": {
+      "fecha": {
+        "value": "2026-03-25T00:09:56.145Z",
+        "timezone": "UTC"
+      },
+      "id": "CONTEBEA4A10A270484195D139CF815742F3"
+    },
+    "DELITOS INFORMÁTICOS.xlsx": {
+      "fecha": {
+        "value": "2026-03-25T00:11:21.816Z",
+        "timezone": "UTC"
+      },
+      "id": "CONT92AC3B93285642069C008C997FA6F8DA"
+    },
+    "HOMICIDIO ACCIDENTES DE TRÁNSITO.xlsx": {
+      "fecha": {
+        "value": "2026-03-24T15:37:17.348Z",
+        "timezone": "UTC"
+      },
+      "id": "CONTD456E9301E634D93ACBCF54B70942138"
+    },
+    "HOMICIDIO INTENCIONAL.xlsx": {
+      "fecha": {
+        "value": "2026-03-24T15:35:29.981Z",
+        "timezone": "UTC"
+      },
+      "id": "CONTD2155DC1726D4A21B0B8267F91325AB5"
+    },
+    "LESIONES ACCIDENTES DE TRÁNSITO.xlsx": {
+      "fecha": {
+        "value": "2026-03-24T22:56:19.140Z",
+        "timezone": "UTC"
+      },
+      "id": "CONT4DA40868407D4752B24BE742D8BF0452"
+    },
+    "LESIONES COMUNES.xlsx": {
+      "fecha": {
+        "value": "2026-03-25T00:43:15.273Z",
+        "timezone": "UTC"
+      },
+      "id": "CONT53C09FE87BE14ACE904069DB6848C811"
+    },
+    "MASACRES.xlsx": {
+      "fecha": {
+        "value": "2026-03-24T22:54:51.125Z",
+        "timezone": "UTC"
+      },
+      "id": "CONT7B88CCACEDD441E3984D326E3696DB5E"
+    },
+    "VIOLENCIA INTRAFAMILIAR.xlsx": {
+      "fecha": {
+        "value": "2026-03-24T23:44:53.941Z",
+        "timezone": "UTC"
+      },
+      "id": "CONT93A3E06E0C134EF197783385D56AABBF"
+    },
+    "CAPTURAS POR MINERÍA ILEGAL.xlsx": {
+      "fecha": {
+        "value": "2026-03-24T23:15:44.174Z",
+        "timezone": "UTC"
+      },
+      "id": "CONT4F7084E366154CD1B233DEE8C36998A6"
+    },
+    "INCAUTACIONES MINERIA.xlsx": {
+      "fecha": {
+        "value": "2026-03-24T23:17:47.657Z",
+        "timezone": "UTC"
+      },
+      "id": "CONTD4C1B83B821F41B3BB75F85A518B52A1"
+    },
+    "INCAUTACIÓN ORO Y MERCURIO.xlsx": {
+      "fecha": {
+        "value": "2026-03-24T23:16:34.867Z",
+        "timezone": "UTC"
+      },
+      "id": "CONT59D80A6A5AC04C588D0E2353D523DFAB"
+    },
+    "MINAS INTERVENIDAS.xlsx": {
+      "fecha": {
+        "value": "2026-03-24T23:17:04.231Z",
+        "timezone": "UTC"
+      },
+      "id": "CONTD646BAB2D93A4EAC8A25B182A38EDDF8"
+    },
+    "DESMOVILIZADOS ELN.xlsx": {
+      "fecha": {
+        "value": "2026-02-24T00:05:52.676Z",
+        "timezone": "UTC"
+      },
+      "id": "CONT28FBFDEE1CEB493B8271EE7CED2A3B38"
+    },
+    "DESVINCULADOS.xlsx": {
+      "fecha": {
+        "value": "2026-03-24T23:03:48.186Z",
+        "timezone": "UTC"
+      },
+      "id": "CONT2A060A992EAD4BACBB5528FF71832EE7"
+    },
+    "SOMETIDOS.xlsx": {
+      "fecha": {
+        "value": "2026-03-24T23:04:22.864Z",
+        "timezone": "UTC"
+      },
+      "id": "CONT9DFC7BF965144F9DB8FD36DAA77CBBE6"
+    },
+    "EXTORSIÓN.xlsx": {
+      "fecha": {
+        "value": "2026-03-24T23:24:18.221Z",
+        "timezone": "UTC"
+      },
+      "id": "CONT7154F2FB1B264CDCAD9A48A3BEE58A77"
+    },
+    "HURTO A COMERCIO.xlsx": {
+      "fecha": {
+        "value": "2026-03-24T23:40:54.389Z",
+        "timezone": "UTC"
+      },
+      "id": "CONT1F6023E051B746DAA1F3E4075209A882"
+    },
+    "HURTO A RESIDENCIAS.xlsx": {
+      "fecha": {
+        "value": "2026-03-24T23:37:29.736Z",
+        "timezone": "UTC"
+      },
+      "id": "CONT278B01DD860B435DB5ECC2AB6ABC3EDB"
+    },
+    "HURTO ABIGEATO.xlsx": {
+      "fecha": {
+        "value": "2026-03-24T23:39:53.759Z",
+        "timezone": "UTC"
+      },
+      "id": "CONTA10A2B7AA8244E908DE49ADC66350C71"
+    },
+    "HURTO DE VEHÍCULOS.xlsx": {
+      "fecha": {
+        "value": "2026-03-24T23:23:40.305Z",
+        "timezone": "UTC"
+      },
+      "id": "CONT2BF65517CF044CC19DD6CB5BB4A7B411"
+    },
+    "HURTO ENTIDADES FINANCIERAS.xlsx": {
+      "fecha": {
+        "value": "2026-03-24T23:38:36.868Z",
+        "timezone": "UTC"
+      },
+      "id": "CONT253B6D0EC16D4FC58A6A28EE5C40634E"
+    },
+    "HURTO PERSONAS.xlsx": {
+      "fecha": {
+        "value": "2026-03-24T23:41:49.970Z",
+        "timezone": "UTC"
+      },
+      "id": "CONTEBDF030F568F49A4A73563ADB8DBA8AB"
+    },
+    "INVASIÓN DE TIERRAS.xlsx": {
+      "fecha": {
+        "value": "2026-03-24T23:42:30.067Z",
+        "timezone": "UTC"
+      },
+      "id": "CONTFFC7807A03264C39B2A068EA6C732896"
+    },
+    "PIRATERÍA TERRESTRE.xlsx": {
+      "fecha": {
+        "value": "2026-03-24T23:21:37.482Z",
+        "timezone": "UTC"
+      },
+      "id": "CONT3521D1E9F98A443995EC01D2E046D974"
+    },
+    "ASPERSION.xlsx": {
+      "fecha": {
+        "value": "2026-03-25T00:17:08.942Z",
+        "timezone": "UTC"
+      },
+      "id": "CONTE4534BAE0AAD44848EA01BEF27F3647A"
+    },
+    "DESTRUCCIÓN DE INFRAESTRUCTURAS.xlsx": {
+      "fecha": {
+        "value": "2026-03-25T00:25:49.379Z",
+        "timezone": "UTC"
+      },
+      "id": "MIGRATED_D55325AEF2D674CF0287A7C70A3F4AAB86A68A14C6C7"
+    },
+    "ERRADICACIÓN.xlsx": {
+      "fecha": {
+        "value": "2026-03-25T00:24:04.213Z",
+        "timezone": "UTC"
+      },
+      "id": "CONT6B4DEA18B71846339D43D1B6DA9F9895"
+    },
+    "HOJA DE COCA.xlsx": {
+      "fecha": {
+        "value": "2026-03-25T00:24:37.252Z",
+        "timezone": "UTC"
+      },
+      "id": "CONT8352C2BCCD8046FD9C7D0375BECA0EFE"
+    },
+    "INCAUTACIÓN DE BASE DE COCA.xlsx": {
+      "fecha": {
+        "value": "2026-03-25T00:19:13.288Z",
+        "timezone": "UTC"
+      },
+      "id": "CONT5C7AF3004351456698F65A3B0E0D2835"
+    },
+    "INCAUTACIÓN DE BASUCO.xlsx": {
+      "fecha": {
+        "value": "2026-03-25T00:20:09.828Z",
+        "timezone": "UTC"
+      },
+      "id": "CONTED6AD91E36534AE29196A57A1F928BB7"
+    },
+    "INCAUTACIÓN DE COCAINA.xlsx": {
+      "fecha": {
+        "value": "2026-03-25T00:20:38.735Z",
+        "timezone": "UTC"
+      },
+      "id": "CONT9C2611CEC797459DADED5AE32FEE1008"
+    },
+    "INCAUTACIÓN DE HEROINA.xlsx": {
+      "fecha": {
+        "value": "2026-03-25T00:25:15.493Z",
+        "timezone": "UTC"
+      },
+      "id": "CONTE9B47819DFC348978204C2FD98F9AD80"
+    },
+    "INCAUTACIÓN DE MARIHUANA.xlsx": {
+      "fecha": {
+        "value": "2026-03-25T00:18:28.625Z",
+        "timezone": "UTC"
+      },
+      "id": "CONTBAD6CD00BFFC4A309B7B4E427C6423F8"
+    },
+    "INSUMOS LIQUIDOS.xlsx": {
+      "fecha": {
+        "value": "2026-03-25T00:16:02.504Z",
+        "timezone": "UTC"
+      },
+      "id": "CONT6427606A5C364B30B63583959A93042B"
+    },
+    "INSUMOS SOLIDOS.xlsx": {
+      "fecha": {
+        "value": "2026-03-25T00:16:36.120Z",
+        "timezone": "UTC"
+      },
+      "id": "CONT1BA5A5E4535848B0906C0319B89A667F"
+    }
+  },
+  "ultima_ingesta_sisc": {
+    "fecha": "2026-03-26T10:20:12.333543",
+    "descargados": 0,
+    "ingresados_sisc": 0,
+    "detalle": []
+  },
+  "nuevos_ultimo": 0,
+  "cambios_ultimo": 0
+}

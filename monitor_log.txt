@@ -1,0 +1,149 @@
+================================================================================
+MONITOR MINDEFENSA - VERSION FINAL OK
+================================================================================
+Fecha: 10/03/2026 08:52
+================================================================================
+
+FASE 1: Detectando archivos...
+   OK: 42 archivos encontrados
+
+FASE 2: Comparando con estado anterior...
+   Nuevos: 42  |  Actualizados: 0  |  Sin cambios: 0
+
+FASE 3: Descargando 42 archivo(s)...
+   -> PUENTES Y VÍAS.xlsx
+      OK 57 KB
+   -> TERRORISMO.xlsx
+      OK 477 KB
+   -> VOLADURA DE OLEODUCTOS.xlsx
+      OK 63 KB
+   -> CAPTURAS POR MINERÍA ILEGAL.xlsx
+      OK 196 KB
+   -> INCAUTACIONES MINERIA.xlsx
+      OK 370 KB
+   -> INCAUTACIÓN ORO Y MERCURIO.xlsx
+      OK 48 KB
+   -> MINAS INTERVENIDAS.xlsx
+      OK 370 KB
+   -> DESMOVILIZADOS ELN.xlsx
+      OK 205 KB
+   -> DESVINCULADOS.xlsx
+      OK 255 KB
+   -> SOMETIDOS.xlsx
+      OK 100 KB
+   -> DELITOS SEXUALES.xlsx
+      OK 12559 KB
+   -> DELITOS INFORMÁTICOS.xlsx
+      OK 11893 KB
+   -> SECUESTRO.xlsx
+      OK 370 KB
+   -> TRATA DE PERSONAS Y TRÁFICO DE MIGRANTES.xlsx
+      OK 146 KB
+   -> AFECTACIÓN A LA FUERZA PÚBLICA.xlsx
+      OK 793 KB
+   -> HOMICIDIO ACCIDENTES DE TRÁNSITO.xlsx
+      OK 2898 KB
+   -> HOMICIDIO INTENCIONAL.xlsx
+      ERROR: Response ended prematurely
+      FALLO
+   -> LESIONES ACCIDENTES DE TRÁNSITO.xlsx
+      ERROR: Response ended prematurely
+      FALLO
+   -> LESIONES COMUNES.xlsx
+      OK 24420 KB
+   -> MASACRES.xlsx
+      OK 29 KB
+   -> VIOLENCIA INTRAFAMILIAR.xlsx
+      OK 19432 KB
+   -> DELITOS CONTRA EL MEDIO AMBIENTE.xlsx
+      OK 2497 KB
+   -> EXTORSIÓN.xlsx
+      OK 2865 KB
+   -> HURTO A COMERCIO.xlsx
+      OK 14706 KB
+   -> HURTO A RESIDENCIAS.xlsx
+      OK 15533 KB
+   -> HURTO ABIGEATO.xlsx
+      OK 1389 KB
+   -> HURTO DE VEHÍCULOS.xlsx
+      OK 11366 KB
+   -> HURTO ENTIDADES FINANCIERAS.xlsx
+      OK 83 KB
+   -> HURTO PERSONAS.xlsx
+      OK 15374 KB
+   -> INVASIÓN DE TIERRAS.xlsx
+      OK 594 KB
+   -> PIRATERÍA TERRESTRE.xlsx
+      OK 308 KB
+   -> ASPERSION.xlsx
+      OK 419 KB
+   -> DESTRUCCIÓN DE INFRAESTRUCTURAS.xlsx
+      FALLO
+   -> ERRADICACIÓN.xlsx
+      OK 4756 KB
+   -> HOJA DE COCA.xlsx
+      OK 499 KB
+   -> INCAUTACIÓN DE BASE DE COCA.xlsx
+      OK 4980 KB
+   -> INCAUTACIÓN DE BASUCO.xlsx
+      OK 6598 KB
+   -> INCAUTACIÓN DE COCAINA.xlsx
+      OK 4339 KB
+   -> INCAUTACIÓN DE HEROINA.xlsx
+      OK 323 KB
+   -> INCAUTACIÓN DE MARIHUANA.xlsx
+      OK 13954 KB
+   -> INSUMOS LIQUIDOS.xlsx
+      OK 2467 KB
+   -> INSUMOS SOLIDOS.xlsx
+      OK 2714 KB
+
+   Total: 39/42
+
+FASE 4: Analisis Jamundi...
+   DELITOS INFORMÁTICOS.xlsx: 1,445 Jamundi / 460,824 total  | Anos: 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026
+   EXTORSIÓN.xlsx: 504 Jamundi / 121,733 total  | Anos: 2003, 2004, 2005, 2007, 2008, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025
+   HURTO PERSONAS.xlsx: 3,842 Jamundi / 629,905 total  | Anos: 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026
+   MASACRES.xlsx: 4 Jamundi / 377 total  | Anos: 2022, 2025
+   SECUESTRO.xlsx: 34 Jamundi / 9,919 total  | Anos: 2005, 2007, 2008, 2009, 2014, 2017, 2018, 2019, 2022, 2023, 2024, 2025
+   TERRORISMO.xlsx: 129 Jamundi / 14,794 total  | Anos: 2003, 2006, 2008, 2009, 2012, 2014, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025
+   VIOLENCIA INTRAFAMILIAR.xlsx: 2,058 Jamundi / 640,595 total  | Anos: 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026
+
+   Resumen guardado: mindefensa_xlsx/resumen_jamundi.txt
+
+FASE 5: Guardando estado...
+   CSV: mindefensa_archivos.csv
+   Estado: mindefensa_state.json
+
+================================================================================
+COMPLETADO
+================================================================================
+
+XLSX en: C:\Proyectos\monitor-mindefensa\mindefensa_xlsx
+================================================================================
+MONITOR MINDEFENSA + INGESTA SISC (con JWT)
+================================================================================
+Fecha: 26/03/2026 10:18
+================================================================================
+
+FASE 1: Detectando archivos en MinDefensa...
+   OK: 42 archivos encontrados
+
+FASE 2: Comparando con estado anterior...
+   Nuevos: 0  |  Actualizados: 0  |  Sin cambios: 42
+
+FASE 2.5: Autenticando en SISC...
+   SISC no disponible (backend apagado o no iniciado)
+
+FASE 3: Sin cambios, nada que procesar
+
+FASE 4: Análisis Jamundí...
+
+FASE 5: Guardando estado...
+   CSV: mindefensa_archivos.csv
+   Estado: mindefensa_state.json
+
+================================================================================
+COMPLETADO — Descargados: 0 | Ingresados SISC: 0
+================================================================================
+^C
