@@ -1,5 +1,5 @@
 from playwright.sync_api import sync_playwright
-import json, requests, pandas as pd, time, unicodedata, os
+import json, requests, pandas as pd, time, unicodedata, os, sys, traceback
 from datetime import datetime
 from pathlib import Path
 
@@ -99,19 +99,33 @@ def normalizar(texto):
 def main():
     # FASE 1: detectar archivos
     print("FASE 1: Detectando archivos...")
-    with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True, args=["--no-sandbox"])
-        page    = browser.new_page()
-        page.on("response", on_response)
-        try:
-            page.goto(URL, wait_until="domcontentloaded", timeout=60000)
-        except: pass
-        page.wait_for_timeout(7000)
-        for i in range(6):
-            page.evaluate(f"window.scrollTo(0, {i*600})")
-            page.wait_for_timeout(700)
-        browser.close()
-
+    try:
+        with sync_playwright() as p:
+            print("   Lanzando navegador...")
+            try:
+                browser = p.chromium.launch(headless=True, args=["--no-sandbox", "--disable-dev-shm-usage"])
+            except Exception as eb:
+                print(f"   FATAL: No se pudo lanzar el navegador: {eb}")
+                raise eb
+                
+            page    = browser.new_page()
+            page.on("response", on_response)
+            print(f"   Navegando a {URL}...")
+            try:
+                page.goto(URL, wait_until="domcontentloaded", timeout=60000)
+            except Exception as eg:
+                print(f"   Aviso: Timeout o error en goto (continuando): {eg}")
+            
+            page.wait_for_timeout(7000)
+            print("   Desplazando página para disparar carga de datos...")
+            for i in range(6):
+                page.evaluate(f"window.scrollTo(0, {i*600})")
+                page.wait_for_timeout(700)
+            browser.close()
+    except Exception as e:
+        print(f"   ERROR en FASE 1: {e}")
+        # No salimos aquí para intentar procesar lo que se haya capturado si es posible
+    
     vistos, unicos = set(), []
     for a in archivos_raw:
         clave = a["nombre"].upper().strip()
@@ -124,11 +138,20 @@ def main():
     print("\nFASE 2: Comparando con estado anterior...")
     estado = {}
     if STATE_FILE.exists():
-        with open(STATE_FILE, encoding="utf-8") as f:
-            estado = json.load(f)
+        try:
+            with open(STATE_FILE, encoding="utf-8") as f:
+                content = f.read().strip()
+                if content:
+                    estado = json.loads(content)
+        except Exception as e:
+            print(f"      AVISO: No se pudo cargar el estado anterior ({e}). Se iniciará de cero.")
     
     previos = estado.get("archivos", {})
     
+    def get_date_val(f_obj):
+        if isinstance(f_obj, dict): return f_obj.get("value", "")
+        return str(f_obj)
+
     # Normalizar previos para comparación robusta
     previos_norm = {k.upper().strip(): v for k, v in previos.items()}
     
@@ -143,8 +166,8 @@ def main():
             nuevos.append(a)
             print(f"      [NUEVO] {nombre}")
         else:
-            fecha_act = a["fecha"]
-            fecha_prev = previos_norm[clave].get("fecha")
+            fecha_act = get_date_val(a["fecha"])
+            fecha_prev = get_date_val(previos_norm[clave].get("fecha"))
             if fecha_act != fecha_prev:
                 con_cambio.append(a)
                 print(f"      [CAMBIO] {nombre}")
@@ -205,7 +228,6 @@ def main():
 
 
     # Output para GitHub Actions
-    import os
     hay_cambios_bool = (len(nuevos) + len(con_cambio)) > 0
     gh_out = os.environ.get('GITHUB_OUTPUT', '')
     if gh_out:
@@ -238,4 +260,12 @@ def main():
     print(f"\nXLSX en: {DOWNLOAD_DIR.resolve()}")
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception as e:
+        print("\n" + "!" * 80)
+        print("ERROR CRÍTICO EN EL MONITOR")
+        print("!" * 80)
+        traceback.print_exc()
+        print("!" * 80)
+        sys.exit(1)

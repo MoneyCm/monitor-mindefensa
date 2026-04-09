@@ -96,29 +96,37 @@ def enviar_resumen():
     color_badge = {"reunion": "#FFB600", "consejo": "#C0392B", "cambio": "#281FD0"}[tipo]
     label_badge = {"reunion": "REUNIÓN MIÉRCOLES", "consejo": "CONSEJO SEGURIDAD", "cambio": "ACTUALIZACIÓN"}[tipo]
 
-    html = f"""
-    <html><body style="font-family:Calibri,Arial;background:#f4f4f8;padding:20px;margin:0">
-    <div style="max-width:620px;margin:0 auto;background:white;border-radius:6px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.1)">
+        # Intentar obtener la fecha de corte más reciente para el texto
+        fecha_corte_texto = "marzo de 2026"
+        if RESUMEN_FILE.exists():
+            try:
+                fechas = [d['corte'] for d in resumen_data.values() if d['corte'] != '—']
+                if fechas: fecha_corte_texto = sorted(fechas)[-1]
+            except: pass
 
-      <!-- Header azul -->
-      <div style="background:#281FD0;padding:24px 28px 16px">
-        <div style="font-size:11px;color:#FFE000;letter-spacing:3px;font-weight:bold;text-transform:uppercase">Alcaldía de Jamundí · Valle del Cauca</div>
-        <div style="font-size:20px;font-weight:bold;color:white;margin-top:4px">Observatorio del Delito</div>
-        <div style="font-size:12px;color:rgba(255,255,255,.7);margin-top:4px">{fecha_hoy} · GitHub Actions</div>
-      </div>
-
-      <!-- Línea amarilla -->
-      <div style="height:4px;background:linear-gradient(to right,#FFE000 20%,#281FD0 20%)"></div>
-
-      <!-- Badge tipo -->
-      <div style="padding:16px 28px 0">
-        <span style="background:{color_badge};color:white;font-size:10px;font-weight:bold;letter-spacing:2px;padding:4px 12px;border-radius:20px">{label_badge}</span>
-      </div>
-
-      <!-- Contenido -->
-      <div style="padding:20px 28px">
-        <h2 style="color:#281FD0;font-size:16px;margin:0 0 8px">Cordial saludo, Secretaría de Seguridad y Equipo de la Secretaría</h2>
-        <p style="color:#606175;font-size:13px;margin:0 0 20px">Por medio de la presente, presento el <b>Boletín de Seguimiento de Indicadores de Seguridad</b> generado a partir de las últimas actualizaciones de la plataforma oficial de MinDefensa (con fecha de corte 24 de marzo de 2026).</p>
+        html = f"""
+        <html><body style="font-family:Calibri,Arial;background:#f4f4f8;padding:20px;margin:0">
+        <div style="max-width:620px;margin:0 auto;background:white;border-radius:6px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.1)">
+    
+          <!-- Header azul -->
+          <div style="background:#281FD0;padding:24px 28px 16px">
+            <div style="font-size:11px;color:#FFE000;letter-spacing:3px;font-weight:bold;text-transform:uppercase">Alcaldía de Jamundí · Valle del Cauca</div>
+            <div style="font-size:20px;font-weight:bold;color:white;margin-top:4px">Observatorio del Delito</div>
+            <div style="font-size:12px;color:rgba(255,255,255,.7);margin-top:4px">{fecha_hoy} · GitHub Actions</div>
+          </div>
+    
+          <!-- Línea amarilla -->
+          <div style="height:4px;background:linear-gradient(to right,#FFE000 20%,#281FD0 20%)"></div>
+    
+          <!-- Badge tipo -->
+          <div style="padding:16px 28px 0">
+            <span style="background:{color_badge};color:white;font-size:10px;font-weight:bold;letter-spacing:2px;padding:4px 12px;border-radius:20px">{label_badge}</span>
+          </div>
+    
+          <!-- Contenido -->
+          <div style="padding:20px 28px">
+            <h2 style="color:#281FD0;font-size:16px;margin:0 0 8px">Cordial saludo, Secretaría de Seguridad y Equipo de la Secretaría</h2>
+            <p style="color:#606175;font-size:13px;margin:0 0 20px">Por medio de la presente, presento el <b>Boletín de Seguimiento de Indicadores de Seguridad</b> generado a partir de las últimas actualizaciones de la plataforma oficial de MinDefensa (con fecha de corte {fecha_corte_texto}).</p>
         <p style="color:#606175;font-size:13px;margin:0 0 20px">A continuación, presentamos los indicadores prioritarios para el municipio de Jamundí en el periodo analizado:</p>
 
         <!-- Stats Globales -->
