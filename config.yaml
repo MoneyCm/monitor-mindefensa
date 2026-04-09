@@ -17,29 +17,49 @@ correo:
   destinatarios: ["secretaria.seguridad@jamundi.gov.co"]
 
 umbrales:
-  max_descargas_por_run: 42
-  timeout_playwright: 90000
+  max_descargas_por_run: 60
+  timeout_playwright: 120000
 
 alias_columnas:
   municipio: ["COD_MUNI", "MUNICIPIO", "MPIO", "COD_MUNICIPIO", "CODIGO MUNICIPIO"]
   fecha: ["FECHA_HECHO", "FECHA HECHO", "ANIO", "FECHA", "AÑO"]
-  cantidad: ["VICTIMAS", "CANTIDAD", "CASOS", "NUMERO_REGISTROS"]
+  cantidad: ["VICTIMAS", "CANTIDAD", "CASOS", "NUMERO_REGISTROS", "CANTIDAD_HECHOS"]
 
-# Mapeo de delitos a patrones de nombre de archivo
+# Mapeo expandido de delitos para cobertura total
 datasets:
   - nombre: "Homicidios"
     patron: "HOMICIDIO INTENCIONAL"
   - nombre: "Hurtos a Personas"
     patron: "HURTO PERSONAS"
-  - nombre: "Violencia Intrafamiliar"
-    patron: "VIOLENCIA INTRAFAMILIAR"
+  - nombre: "Hurtos a Comercio"
+    patron: "HURTO A COMERCIO"
+  - nombre: "Hurtos a Residencias"
+    patron: "HURTO A RESIDENCIAS"
+  - nombre: "Hurtos de Vehículos"
+    patron: "HURTO DE VEH" # Captura VEHICULOS y VEHÍCULOS
   - nombre: "Extorsión"
-    patron: "EXTORSION"
+    patron: "EXTORSI" # Captura EXTORSIÓN y EXTORSION
   - nombre: "Secuestro"
     patron: "SECUESTRO"
-  - nombre: "Delitos Sexuales"
-    patron: "DELITOS SEXUALES"
   - nombre: "Terrorismo"
     patron: "TERRORISMO"
-  - nombre: "Homicidio Tránsito"
-    patron: "HOMICIDIO ACCIDENTES DE TRANSITO"
+  - nombre: "Delitos Sexuales"
+    patron: "DELITOS SEXUALES"
+  - nombre: "Violencia Intrafamiliar"
+    patron: "VIOLENCIA INTRAFAMILIAR"
+  - nombre: "Lesiones Personales"
+    patron: "LESIONES COMUNES"
+  - nombre: "Homicidios Tránsito"
+    patron: "HOMICIDIO ACCIDENTES"
+  - nombre: "Lesiones Tránsito"
+    patron: "LESIONES ACCIDENTES"
+  - nombre: "Masacres"
+    patron: "MASACRES"
+  - nombre: "Abigeato"
+    patron: "ABIGEATO"
+  - nombre: "Trata de Personas"
+    patron: "TRATA DE PERSONAS"
+  - nombre: "Piratería Terrestre"
+    patron: "PIRATER" # Piratería
+  - nombre: "Delitos Informáticos"
+    patron: "INFORM" # Delitos Informáticos
