@@ -1,29 +1,39 @@
-﻿name: Monitor MinDefensa
+name: Monitor MinDefensa V2 Professional
+
 on:
   schedule:
-    - cron: "0 12 * * *"
-    - cron: "0 23 * * 2"
-    - cron: "0 23 * * 5"
-  workflow_dispatch:
+    - cron: "0 12 * * *"       # Diario 07:00 AM COL
+    - cron: "0 23 * * 2,5"     # Martes y Viernes Noche (Consejo/Reunión)
+  workflow_dispatch:           # Ejecución manual
+    inputs:
+      force_download:
+        description: 'Forzar descarga de todos los archivos'
+        required: false
+        default: 'false'
+        type: boolean
 
 jobs:
   monitor:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
-
+    permissions:
+      contents: write
     steps:
-      - name: Checkout
+      - name: Checkout Repo
         uses: actions/checkout@v4
 
-      - name: Restaurar estado anterior
-        uses: actions/cache@v4
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v5
         with:
-          path: mindefensa_state.json
-          key: mindefensa-state-${{ github.run_id }}
-          restore-keys: |
-            mindefensa-state-
+          python-version: "3.11"
+          cache: 'pip'
 
-      - name: Restaurar Excel descargados
+      - name: Instalar Dependencias
+        run: |
+          pip install -r requirements.txt
+          playwright install chromium
+          playwright install-deps chromium
+
+      - name: Restaurar Caché de Excel
         uses: actions/cache@v4
         with:
           path: mindefensa_xlsx
@@ -31,44 +41,33 @@ jobs:
           restore-keys: |
             mindefensa-xlsx-
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      - name: Instalar dependencias
-        run: |
-          pip install -r requirements.txt
-          playwright install chromium
-          playwright install-deps chromium
-
-      - name: Ejecutar monitor
-        id: monitor
-        env:
-          FORCE_DOWNLOAD_ALL: ${{ github.event_name == 'workflow_dispatch' || github.event.schedule == '0 23 * * 2' || github.event.schedule == '0 23 * * 5' }}
-        run: python monitor.py
-
-      - name: Generar reporte PDF
-        if: steps.monitor.outputs.hay_cambios == 'true' || github.event_name == 'workflow_dispatch' || github.event.schedule == '0 23 * * 2' || github.event.schedule == '0 23 * * 5'
-        run: python generar_reporte.py
-
-      - name: Enviar correo con reporte
-        if: steps.monitor.outputs.hay_cambios == 'true' || github.event_name == 'workflow_dispatch' || github.event.schedule == '0 23 * * 2' || github.event.schedule == '0 23 * * 5'
+      - name: Ejecutar Pipeline Monitor
+        id: monitor_run
         env:
           GMAIL_USER: ${{ secrets.GMAIL_USER }}
-          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
-        run: python notificar.py
+          GMAIL_PASS: ${{ secrets.GMAIL_APP_PASSWORD }}
+          SISC_TOKEN: ${{ secrets.SISC_TOKEN }}
+          SISC_API_URL: ${{ secrets.SISC_API_URL }}
+          FORCE_DOWNLOAD: ${{ github.event.inputs.force_download || 'false' }}
+        run: python main_monitor.py
 
-      - name: Guardar estado actualizado
-        if: always()
-        uses: actions/cache/save@v4
-        with:
-          path: mindefensa_state.json
-          key: mindefensa-state-${{ github.run_id }}
+      - name: Commit State Update
+        if: success() && steps.monitor_run.outputs.hay_cambios == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add mindefensa_state.json
+          git commit -m "chore: update monitor state [skip ci]" || echo "No changes to commit"
+          git push
 
-      - name: Guardar Excel descargados
+      - name: Guardar Caché de Excel
         if: always()
         uses: actions/cache/save@v4
         with:
           path: mindefensa_xlsx
           key: mindefensa-xlsx-${{ github.run_id }}
+
+      - name: Alerta de Fallo
+        if: failure()
+        run: |
+          echo "::error::El monitor ha fallado. Revisar logs de la ejecución."

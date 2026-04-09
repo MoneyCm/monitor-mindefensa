@@ -1,0 +1,45 @@
+municipio:
+  nombre: "Jamundí"
+  codigo: 76364
+  fuente: "Ministerio de Defensa Nacional"
+
+estetica:
+  azul: "#281FD0"
+  amarillo: "#FFE000"
+  graficas_fondo: "#F4F4F8"
+
+correo:
+  host: "smtp.gmail.com"
+  port: 465
+  asunto_base: "Boletín Seguridad Jamundí"
+  prefijo_reunion: "📋 Reunión Planeación"
+  prefijo_consejo: "🔒 Consejo Seguridad"
+  destinatarios: ["secretaria.seguridad@jamundi.gov.co"]
+
+umbrales:
+  max_descargas_por_run: 42
+  timeout_playwright: 90000
+
+alias_columnas:
+  municipio: ["COD_MUNI", "MUNICIPIO", "MPIO", "COD_MUNICIPIO", "CODIGO MUNICIPIO"]
+  fecha: ["FECHA_HECHO", "FECHA HECHO", "ANIO", "FECHA", "AÑO"]
+  cantidad: ["VICTIMAS", "CANTIDAD", "CASOS", "NUMERO_REGISTROS"]
+
+# Mapeo de delitos a patrones de nombre de archivo
+datasets:
+  - nombre: "Homicidios"
+    patron: "HOMICIDIO INTENCIONAL"
+  - nombre: "Hurtos a Personas"
+    patron: "HURTO PERSONAS"
+  - nombre: "Violencia Intrafamiliar"
+    patron: "VIOLENCIA INTRAFAMILIAR"
+  - nombre: "Extorsión"
+    patron: "EXTORSION"
+  - nombre: "Secuestro"
+    patron: "SECUESTRO"
+  - nombre: "Delitos Sexuales"
+    patron: "DELITOS SEXUALES"
+  - nombre: "Terrorismo"
+    patron: "TERRORISMO"
+  - nombre: "Homicidio Tránsito"
+    patron: "HOMICIDIO ACCIDENTES DE TRANSITO"

@@ -1,0 +1,21 @@
+name: Anti-Inactivity Keepalive
+
+on:
+  schedule:
+    - cron: "0 0 1 * *" # Ejecutar el primer día de cada mes
+
+jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+        
+      - name: Empty Commit
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git commit --allow-empty -m "chore: keepalive $(date +'%B %Y')"
+          git push

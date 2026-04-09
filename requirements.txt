@@ -1,7 +1,8 @@
-﻿playwright
+playwright
 requests
 pandas
 openpyxl
-python-calamine
 reportlab
 matplotlib
+PyYAML
+loguru

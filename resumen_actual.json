@@ -1,0 +1,70 @@
+{
+  "Homicidio Intencional": {
+    "valor": 20,
+    "corte": "26/Feb/26"
+  },
+  "Violencia Intrafamiliar": {
+    "valor": 0,
+    "corte": "05/Aug/20"
+  },
+  "Delitos Sexuales": {
+    "valor": 14,
+    "corte": "28/Feb/26"
+  },
+  "Secuestro": {
+    "valor": 3,
+    "corte": "15/Jan/26"
+  },
+  "Extorsión": {
+    "valor": 4,
+    "corte": "10/Feb/26"
+  },
+  "Terrorismo": {
+    "valor": 0,
+    "corte": "20/Nov/25"
+  },
+  "Masacres": {
+    "valor": 0,
+    "corte": "10/Jun/25"
+  },
+  "Huerto a Personas": {
+    "valor": 87,
+    "corte": "28/Feb/26"
+  },
+  "Hurto a Residencias": {
+    "valor": 9,
+    "corte": "25/Feb/26"
+  },
+  "Hurto de Vehículos": {
+    "valor": 56,
+    "corte": "28/Feb/26"
+  },
+  "Hurto a Comercio": {
+    "valor": 13,
+    "corte": "26/Feb/26"
+  },
+  "Homicidio Tránsito": {
+    "valor": 5,
+    "corte": "14/Feb/26"
+  },
+  "Lesiones Tránsito": {
+    "valor": 67,
+    "corte": "28/Feb/26"
+  },
+  "Delitos Medio Ambiente": {
+    "valor": 0,
+    "corte": "21/Jul/25"
+  },
+  "Capturas Minería": {
+    "valor": 0,
+    "corte": "21/May/24"
+  },
+  "Incautaciones Minería": {
+    "valor": 0,
+    "corte": "19/Mar/24"
+  },
+  "Minas Intervenidas": {
+    "valor": 1,
+    "corte": "19/Jan/26"
+  }
+}
