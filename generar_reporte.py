@@ -84,6 +84,12 @@ class PDFGenerator:
             ant = df[(df['ANIO'] == anio_ant) & (df['MES'] <= mes_corte)]['VALOR_NORMALIZADO'].sum()
             act = df[(df['ANIO'] == anio_act) & (df['MES'] <= mes_corte)]['VALOR_NORMALIZADO'].sum()
             
+            ult_reg = "N/A"
+            if 'FECHA_DT' in df.columns:
+                max_d = df['FECHA_DT'].max()
+                if pd.notnull(max_d):
+                    ult_reg = max_d.strftime("%d/%m/%Y")
+            
             # Variación
             if ant > 0:
                 var = ((act - ant) / ant) * 100
@@ -99,7 +105,8 @@ class PDFGenerator:
                 "anterior": int(ant),
                 "actual": int(act),
                 "variacion": var_str,
-                "estado": estado
+                "estado": estado,
+                "ultimo_registro": ult_reg
             })
 
         # Composición del documento
@@ -128,7 +135,7 @@ class PDFGenerator:
 
         # Tabla Resumen
         elements.append(Paragraph("Resumen de Indicadores Clave", styles['Heading2']))
-        table_data = [[Paragraph("Indicador", style_header_table), Paragraph(str(anio_ant), style_header_table), Paragraph(str(anio_act), style_header_table), Paragraph("Variación", style_header_table), Paragraph("Estado", style_header_table)]]
+        table_data = [[Paragraph("Indicador", style_header_table), Paragraph(str(anio_ant), style_header_table), Paragraph(str(anio_act), style_header_table), Paragraph("Variación", style_header_table), Paragraph("Estado", style_header_table), Paragraph("Últ. Reg.", style_header_table)]]
         
         for row in sorted(resumen_tabla, key=lambda x: x['actual'], reverse=True):
             color_stat = colors.red if row['estado'] == "SUBE" else (colors.green if row['estado'] == "BAJA" else colors.black)
@@ -137,10 +144,11 @@ class PDFGenerator:
                 Paragraph(f"{row['anterior']:,}", ParagraphStyle('n', alignment=TA_CENTER)),
                 Paragraph(f"<b>{row['actual']:,}</b>", ParagraphStyle('n', alignment=TA_CENTER)),
                 Paragraph(f"<b>{row['variacion']}</b>", ParagraphStyle('n', alignment=TA_CENTER, textColor=color_stat)),
-                Paragraph(row['estado'], ParagraphStyle('n', alignment=TA_CENTER, textColor=color_stat, fontSize=8))
+                Paragraph(row['estado'], ParagraphStyle('n', alignment=TA_CENTER, textColor=color_stat, fontSize=8)),
+                Paragraph(row.get('ultimo_registro', 'N/A'), ParagraphStyle('n', alignment=TA_CENTER, fontSize=8))
             ])
 
-        main_table = Table(table_data, colWidths=[6*cm, 2.5*cm, 2.5*cm, 3*cm, 3*cm])
+        main_table = Table(table_data, colWidths=[5.5*cm, 2*cm, 2*cm, 2.5*cm, 2.5*cm, 2.5*cm])
         main_table.setStyle(TableStyle([
             ('BACKGROUND', (0,0), (-1,0), self.azul),
             ('GRID', (0,0), (-1,-1), 0.5, colors.grey),

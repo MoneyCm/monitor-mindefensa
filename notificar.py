@@ -28,11 +28,13 @@ class Notifier:
         rows_html = ""
         for r in sorted(resumen, key=lambda x: x['actual'], reverse=True)[:5]:
             color = "#C0392B" if r['estado'] == "SUBE" else ("#2E7D32" if r['estado'] == "BAJA" else "#606175")
+            ult_reg = r.get('ultimo_registro', 'N/A')
             rows_html += f"""
             <tr>
                 <td style="padding:10px; border-bottom:1px solid #eee;">{r['delito']}</td>
                 <td style="padding:10px; border-bottom:1px solid #eee; text-align:center;">{r['actual']}</td>
                 <td style="padding:10px; border-bottom:1px solid #eee; text-align:center; color:{color}; font-weight:bold;">{r['variacion']}</td>
+                <td style="padding:10px; border-bottom:1px solid #eee; text-align:center; font-size: 11px;">{ult_reg}</td>
             </tr>
             """
 
@@ -59,6 +61,7 @@ class Notifier:
                             <th style="padding: 10px; text-align: left; border-bottom: 2px solid #ddd;">Indicador</th>
                             <th style="padding: 10px; text-align: center; border-bottom: 2px solid #ddd;">Actual</th>
                             <th style="padding: 10px; text-align: center; border-bottom: 2px solid #ddd;">Var.</th>
+                            <th style="padding: 10px; text-align: center; border-bottom: 2px solid #ddd;">Últ. Reg.</th>
                         </tr>
                         {rows_html}
                     </table>
@@ -107,9 +110,9 @@ class Notifier:
         prefijo, html = self._generar_html(resumen, tipo_run, sha)
         
         msg = MIMEMultipart()
-        asunto = "Boletín MinDefensa del último registro"
+        asunto = "Boletín MinDefensa"
         if fecha_registro:
-            asunto += f" ({fecha_registro.strip()})"
+            asunto += f" - {fecha_registro.strip()}"
         msg['Subject'] = asunto
         msg['From'] = self.user
         msg['To'] = ", ".join(self.destinatarios)

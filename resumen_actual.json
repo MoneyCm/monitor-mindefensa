@@ -1,70 +1,121 @@
-{
-  "Homicidio Intencional": {
-    "valor": 20,
-    "corte": "26/Feb/26"
+[
+  {
+    "delito": "Violencia Intrafamiliar",
+    "anterior": 0,
+    "actual": 0,
+    "variacion": "N/A",
+    "estado": "SIN DATOS"
   },
-  "Violencia Intrafamiliar": {
-    "valor": 0,
-    "corte": "05/Aug/20"
+  {
+    "delito": "Secuestro",
+    "anterior": 0,
+    "actual": 4,
+    "variacion": "N/A",
+    "estado": "NUEVO"
   },
-  "Delitos Sexuales": {
-    "valor": 14,
-    "corte": "28/Feb/26"
+  {
+    "delito": "Trata de Personas",
+    "anterior": 0,
+    "actual": 0,
+    "variacion": "N/A",
+    "estado": "SIN DATOS"
   },
-  "Secuestro": {
-    "valor": 3,
-    "corte": "15/Jan/26"
+  {
+    "delito": "Delitos Informáticos",
+    "anterior": 63,
+    "actual": 77,
+    "variacion": "+22.2%",
+    "estado": "SUBE"
   },
-  "Extorsión": {
-    "valor": 4,
-    "corte": "10/Feb/26"
+  {
+    "delito": "Extorsión",
+    "anterior": 5,
+    "actual": 10,
+    "variacion": "+100.0%",
+    "estado": "SUBE"
   },
-  "Terrorismo": {
-    "valor": 0,
-    "corte": "20/Nov/25"
+  {
+    "delito": "Hurtos a Comercio",
+    "anterior": 22,
+    "actual": 15,
+    "variacion": "-31.8%",
+    "estado": "BAJA"
   },
-  "Masacres": {
-    "valor": 0,
-    "corte": "10/Jun/25"
+  {
+    "delito": "Hurtos a Residencias",
+    "anterior": 16,
+    "actual": 15,
+    "variacion": "-6.2%",
+    "estado": "BAJA"
   },
-  "Huerto a Personas": {
-    "valor": 87,
-    "corte": "28/Feb/26"
+  {
+    "delito": "Abigeato",
+    "anterior": 0,
+    "actual": 0,
+    "variacion": "N/A",
+    "estado": "SIN DATOS"
   },
-  "Hurto a Residencias": {
-    "valor": 9,
-    "corte": "25/Feb/26"
+  {
+    "delito": "Hurtos de Vehículos",
+    "anterior": 61,
+    "actual": 82,
+    "variacion": "+34.4%",
+    "estado": "SUBE"
   },
-  "Hurto de Vehículos": {
-    "valor": 56,
-    "corte": "28/Feb/26"
+  {
+    "delito": "Hurtos a Personas",
+    "anterior": 142,
+    "actual": 142,
+    "variacion": "+0.0%",
+    "estado": "IGUAL"
   },
-  "Hurto a Comercio": {
-    "valor": 13,
-    "corte": "26/Feb/26"
+  {
+    "delito": "Piratería Terrestre",
+    "anterior": 0,
+    "actual": 0,
+    "variacion": "N/A",
+    "estado": "SIN DATOS"
   },
-  "Homicidio Tránsito": {
-    "valor": 5,
-    "corte": "14/Feb/26"
+  {
+    "delito": "Terrorismo",
+    "anterior": 4,
+    "actual": 1,
+    "variacion": "-75.0%",
+    "estado": "BAJA"
   },
-  "Lesiones Tránsito": {
-    "valor": 67,
-    "corte": "28/Feb/26"
+  {
+    "delito": "Homicidios Tránsito",
+    "anterior": 3,
+    "actual": 5,
+    "variacion": "+66.7%",
+    "estado": "SUBE"
   },
-  "Delitos Medio Ambiente": {
-    "valor": 0,
-    "corte": "21/Jul/25"
+  {
+    "delito": "Homicidios",
+    "anterior": 30,
+    "actual": 20,
+    "variacion": "-33.3%",
+    "estado": "BAJA"
   },
-  "Capturas Minería": {
-    "valor": 0,
-    "corte": "21/May/24"
+  {
+    "delito": "Lesiones Tránsito",
+    "anterior": 59,
+    "actual": 83,
+    "variacion": "+40.7%",
+    "estado": "SUBE"
   },
-  "Incautaciones Minería": {
-    "valor": 0,
-    "corte": "19/Mar/24"
+  {
+    "delito": "Lesiones Personales",
+    "anterior": 98,
+    "actual": 71,
+    "variacion": "-27.6%",
+    "estado": "BAJA"
   },
-  "Minas Intervenidas": {
-    "valor": 1,
-    "corte": "19/Jan/26"
+  {
+    "delito": "Masacres",
+    "anterior": 2,
+    "actual": 0,
+    "variacion": "-100.0%",
+    "estado": "BAJA"
   }
-}
+]
