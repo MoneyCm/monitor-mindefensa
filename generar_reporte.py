@@ -157,8 +157,15 @@ class PDFGenerator:
             elements.append(Image(graf_path, 16*cm, 8*cm))
             elements.append(Spacer(1, 1*cm))
 
+        # Firma
+        elements.append(Spacer(1, 1*cm))
+        style_firma = ParagraphStyle('Firma', parent=styles['Normal'], fontSize=10, textColor=colors.black, alignment=TA_CENTER)
+        elements.append(Paragraph("<b>Elaborado por:</b>", style_firma))
+        elements.append(Paragraph("César Alfonso Forero Molano", style_firma))
+        elements.append(Paragraph("Profesional Secretaría de Seguridad y Convivencia", style_firma))
+
         # Pie de página institucional
-        elements.append(Spacer(1, 2*cm))
+        elements.append(Spacer(1, 1*cm))
         footer = Table([[Paragraph("Fuente: Ministerio de Defensa Nacional | Generado por Sistema de Vigilancia Automatizado SISC", ParagraphStyle('f', fontSize=7, alignment=TA_CENTER, textColor=colors.grey))]], colWidths=[18*cm])
         elements.append(footer)
 
@@ -168,6 +175,11 @@ class PDFGenerator:
         # Guardar resumen en JSON para otros módulos
         import json
         with open("resumen_actual.json", "w", encoding="utf-8") as f:
-            json.dump(resumen_tabla, f, ensure_ascii=False, indent=2)
+            output_data = {
+                "mes_corte": self.meses_es[mes_corte],
+                "anio_act": anio_act,
+                "indicadores": resumen_tabla
+            }
+            json.dump(output_data, f, ensure_ascii=False, indent=2)
 
         return output_pdf
