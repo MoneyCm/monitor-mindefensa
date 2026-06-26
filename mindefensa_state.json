@@ -1,26 +1,19 @@
 {
-  "ultima_revision": "2026-06-24T00:00:31.171489",
+  "ultima_revision": "2026-06-26T14:17:47.813790",
   "archivos": {
-    "DELITOS INFORMÁTICOS.xlsx": {
+    "AFECTACIÓN A LA FUERZA PÚBLICA.xlsx": {
       "fecha": {
-        "value": "2026-06-17T22:15:42.144Z",
+        "value": "2026-06-19T17:30:36.766Z",
         "timezone": "UTC"
       },
-      "id": "CONT92AC3B93285642069C008C997FA6F8DA"
+      "id": "CONT9DC8FFA70F73409DBD3B60EBAF72A7C3"
     },
-    "DELITOS SEXUALES.xlsx": {
+    "DELITOS CONTRA EL MEDIO AMBIENTE.xlsx": {
       "fecha": {
-        "value": "2026-06-17T22:14:58.045Z",
+        "value": "2026-06-17T21:52:52.118Z",
         "timezone": "UTC"
       },
-      "id": "CONTEBEA4A10A270484195D139CF815742F3"
-    },
-    "VIOLENCIA INTRAFAMILIAR.xlsx": {
-      "fecha": {
-        "value": "2026-06-17T22:11:24.385Z",
-        "timezone": "UTC"
-      },
-      "id": "CONT93A3E06E0C134EF197783385D56AABBF"
+      "id": "CONT8A90C91C09374BC0BBD44108E631B2B1"
     },
     "SECUESTRO.xlsx": {
       "fecha": {
@@ -35,6 +28,34 @@
         "timezone": "UTC"
       },
       "id": "CONT03B8C922E3C54A1698E6FE92BDA66FB4"
+    },
+    "CAPTURAS POR MINERÍA ILEGAL.xlsx": {
+      "fecha": {
+        "value": "2026-06-17T21:34:20.263Z",
+        "timezone": "UTC"
+      },
+      "id": "CONT4F7084E366154CD1B233DEE8C36998A6"
+    },
+    "INCAUTACIONES MINERIA.xlsx": {
+      "fecha": {
+        "value": "2026-06-17T21:35:01.485Z",
+        "timezone": "UTC"
+      },
+      "id": "CONTD4C1B83B821F41B3BB75F85A518B52A1"
+    },
+    "MINAS INTERVENIDAS.xlsx": {
+      "fecha": {
+        "value": "2026-06-17T21:34:10.830Z",
+        "timezone": "UTC"
+      },
+      "id": "CONTD646BAB2D93A4EAC8A25B182A38EDDF8"
+    },
+    "VIOLENCIA INTRAFAMILIAR.xlsx": {
+      "fecha": {
+        "value": "2026-06-17T22:11:24.385Z",
+        "timezone": "UTC"
+      },
+      "id": "CONT93A3E06E0C134EF197783385D56AABBF"
     },
     "DESMOVILIZADOS ELN.xlsx": {
       "fecha": {
@@ -56,6 +77,20 @@
         "timezone": "UTC"
       },
       "id": "CONT9DFC7BF965144F9DB8FD36DAA77CBBE6"
+    },
+    "DELITOS INFORMÁTICOS.xlsx": {
+      "fecha": {
+        "value": "2026-06-17T22:15:42.144Z",
+        "timezone": "UTC"
+      },
+      "id": "CONT92AC3B93285642069C008C997FA6F8DA"
+    },
+    "DELITOS SEXUALES.xlsx": {
+      "fecha": {
+        "value": "2026-06-17T22:14:58.045Z",
+        "timezone": "UTC"
+      },
+      "id": "CONTEBEA4A10A270484195D139CF815742F3"
     },
     "HOMICIDIO ACCIDENTES DE TRÁNSITO.xlsx": {
       "fecha": {
@@ -112,104 +147,6 @@
         "timezone": "UTC"
       },
       "id": "CONTA4D0847400934551B61A93D9C6B0E521"
-    },
-    "AFECTACIÓN A LA FUERZA PÚBLICA.xlsx": {
-      "fecha": {
-        "value": "2026-06-19T17:30:36.766Z",
-        "timezone": "UTC"
-      },
-      "id": "CONT9DC8FFA70F73409DBD3B60EBAF72A7C3"
-    },
-    "DELITOS CONTRA EL MEDIO AMBIENTE.xlsx": {
-      "fecha": {
-        "value": "2026-06-17T21:52:52.118Z",
-        "timezone": "UTC"
-      },
-      "id": "CONT8A90C91C09374BC0BBD44108E631B2B1"
-    },
-    "CAPTURAS POR MINERÍA ILEGAL.xlsx": {
-      "fecha": {
-        "value": "2026-06-17T21:34:20.263Z",
-        "timezone": "UTC"
-      },
-      "id": "CONT4F7084E366154CD1B233DEE8C36998A6"
-    },
-    "INCAUTACIONES MINERIA.xlsx": {
-      "fecha": {
-        "value": "2026-06-17T21:35:01.485Z",
-        "timezone": "UTC"
-      },
-      "id": "CONTD4C1B83B821F41B3BB75F85A518B52A1"
-    },
-    "MINAS INTERVENIDAS.xlsx": {
-      "fecha": {
-        "value": "2026-06-17T21:34:10.830Z",
-        "timezone": "UTC"
-      },
-      "id": "CONTD646BAB2D93A4EAC8A25B182A38EDDF8"
-    },
-    "EXTORSIÓN.xlsx": {
-      "fecha": {
-        "value": "2026-06-17T22:09:03.447Z",
-        "timezone": "UTC"
-      },
-      "id": "CONT7154F2FB1B264CDCAD9A48A3BEE58A77"
-    },
-    "HURTO A COMERCIO.xlsx": {
-      "fecha": {
-        "value": "2026-06-17T22:09:47.554Z",
-        "timezone": "UTC"
-      },
-      "id": "CONT1F6023E051B746DAA1F3E4075209A882"
-    },
-    "HURTO A RESIDENCIAS.xlsx": {
-      "fecha": {
-        "value": "2026-06-17T21:59:12.236Z",
-        "timezone": "UTC"
-      },
-      "id": "CONT278B01DD860B435DB5ECC2AB6ABC3EDB"
-    },
-    "HURTO ABIGEATO.xlsx": {
-      "fecha": {
-        "value": "2026-06-17T21:59:36.287Z",
-        "timezone": "UTC"
-      },
-      "id": "CONTA10A2B7AA8244E908DE49ADC66350C71"
-    },
-    "HURTO DE VEHÍCULOS.xlsx": {
-      "fecha": {
-        "value": "2026-06-17T22:03:49.840Z",
-        "timezone": "UTC"
-      },
-      "id": "CONT2BF65517CF044CC19DD6CB5BB4A7B411"
-    },
-    "HURTO ENTIDADES FINANCIERAS.xlsx": {
-      "fecha": {
-        "value": "2026-06-17T22:06:01.675Z",
-        "timezone": "UTC"
-      },
-      "id": "CONT253B6D0EC16D4FC58A6A28EE5C40634E"
-    },
-    "HURTO PERSONAS.xlsx": {
-      "fecha": {
-        "value": "2026-06-17T22:06:49.325Z",
-        "timezone": "UTC"
-      },
-      "id": "CONTEBDF030F568F49A4A73563ADB8DBA8AB"
-    },
-    "INVASIÓN DE TIERRAS.xlsx": {
-      "fecha": {
-        "value": "2026-06-17T22:07:19.605Z",
-        "timezone": "UTC"
-      },
-      "id": "CONTFFC7807A03264C39B2A068EA6C732896"
-    },
-    "PIRATERÍA TERRESTRE.xlsx": {
-      "fecha": {
-        "value": "2026-06-17T22:08:18.074Z",
-        "timezone": "UTC"
-      },
-      "id": "CONT3521D1E9F98A443995EC01D2E046D974"
     },
     "ASPERSION.xlsx": {
       "fecha": {
@@ -280,6 +217,69 @@
         "timezone": "UTC"
       },
       "id": "CONT1BA5A5E4535848B0906C0319B89A667F"
+    },
+    "EXTORSIÓN.xlsx": {
+      "fecha": {
+        "value": "2026-06-17T22:09:03.447Z",
+        "timezone": "UTC"
+      },
+      "id": "CONT7154F2FB1B264CDCAD9A48A3BEE58A77"
+    },
+    "HURTO A COMERCIO.xlsx": {
+      "fecha": {
+        "value": "2026-06-17T22:09:47.554Z",
+        "timezone": "UTC"
+      },
+      "id": "CONT1F6023E051B746DAA1F3E4075209A882"
+    },
+    "HURTO A RESIDENCIAS.xlsx": {
+      "fecha": {
+        "value": "2026-06-17T21:59:12.236Z",
+        "timezone": "UTC"
+      },
+      "id": "CONT278B01DD860B435DB5ECC2AB6ABC3EDB"
+    },
+    "HURTO ABIGEATO.xlsx": {
+      "fecha": {
+        "value": "2026-06-17T21:59:36.287Z",
+        "timezone": "UTC"
+      },
+      "id": "CONTA10A2B7AA8244E908DE49ADC66350C71"
+    },
+    "HURTO DE VEHÍCULOS.xlsx": {
+      "fecha": {
+        "value": "2026-06-17T22:03:49.840Z",
+        "timezone": "UTC"
+      },
+      "id": "CONT2BF65517CF044CC19DD6CB5BB4A7B411"
+    },
+    "HURTO ENTIDADES FINANCIERAS.xlsx": {
+      "fecha": {
+        "value": "2026-06-17T22:06:01.675Z",
+        "timezone": "UTC"
+      },
+      "id": "CONT253B6D0EC16D4FC58A6A28EE5C40634E"
+    },
+    "HURTO PERSONAS.xlsx": {
+      "fecha": {
+        "value": "2026-06-17T22:06:49.325Z",
+        "timezone": "UTC"
+      },
+      "id": "CONTEBDF030F568F49A4A73563ADB8DBA8AB"
+    },
+    "INVASIÓN DE TIERRAS.xlsx": {
+      "fecha": {
+        "value": "2026-06-17T22:07:19.605Z",
+        "timezone": "UTC"
+      },
+      "id": "CONTFFC7807A03264C39B2A068EA6C732896"
+    },
+    "PIRATERÍA TERRESTRE.xlsx": {
+      "fecha": {
+        "value": "2026-06-17T22:08:18.074Z",
+        "timezone": "UTC"
+      },
+      "id": "CONT3521D1E9F98A443995EC01D2E046D974"
     }
   },
   "ultima_ingesta_sisc": {
