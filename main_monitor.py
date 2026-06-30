@@ -95,6 +95,32 @@ def main():
     # 6. Guardar Estado
     state.save(archivos_detectados, len(nuevos), len(cambiados))
 
+    # 6.5. Cargar archivos locales para datasets no descargados en esta ejecución
+    # Esto garantiza que el reporte contenga todos los delitos configurados
+    log.info("Completando reporte con archivos locales para delitos sin cambios...")
+    for d in cfg['datasets']:
+        nombre_dataset = d['nombre']
+        if nombre_dataset not in resultados:
+            # Buscar el archivo correspondiente en la lista detectada
+            patron = d['patron'].upper()
+            archivo_info = next((a for a in archivos_detectados if patron in a['nombre'].upper()), None)
+            if archivo_info:
+                ruta_local = processor.output_dir / archivo_info['nombre']
+                if ruta_local.exists():
+                    log.info(f"Cargando {nombre_dataset} desde caché local: {archivo_info['nombre']}")
+                    try:
+                        res = processor.procesar_archivo(ruta_local)
+                        if res and "error" not in res:
+                            resultados[nombre_dataset] = res
+                        else:
+                            log.warning(f"  Error al procesar archivo local {archivo_info['nombre']}: {res.get('error') if res else 'Desconocido'}")
+                    except Exception as e:
+                        log.error(f"Error procesando archivo local {archivo_info['nombre']}: {e}")
+                else:
+                    log.warning(f"  Archivo local para {nombre_dataset} no encontrado en {ruta_local}")
+            else:
+                log.warning(f"  No se detectó ningún archivo en el portal para el patrón: {d['patron']}")
+
     # 7. Generar Reporte PDF
     reporte_ok = False
     if resultados:
