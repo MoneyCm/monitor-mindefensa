@@ -37,10 +37,17 @@ def main():
 
     # 4. Determinar si necesitamos descargar y procesar
     # Forzamos descarga en días de reporte o si hay cambios
-    dia_semana = datetime.now().weekday() # 1=Martes, 4=Viernes
+    hoy = datetime.now()
+    dia_semana = hoy.weekday() # 0=Lunes, 1=Martes, ..., 4=Viernes
     tipo_run = "normal"
-    if dia_semana == 1: tipo_run = "reunion"
-    if dia_semana == 4: tipo_run = "consejo"
+    
+    if dia_semana == 1: 
+        tipo_run = "reunion"
+    elif dia_semana == 4:
+        # Si al sumar 7 días cambia el mes, es el último viernes del mes (semana del Consejo)
+        from datetime import timedelta
+        if (hoy + timedelta(days=7)).month != hoy.month:
+            tipo_run = "consejo"
     
     force_all = os.environ.get("FORCE_DOWNLOAD", "false").lower() == "true" or tipo_run != "normal"
     
