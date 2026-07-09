@@ -99,6 +99,38 @@ class PDFGenerator:
                 var_str = "N/A"
                 estado = "NUEVO" if act > 0 else "SIN DATOS"
 
+            # Buscar información de georreferenciación/ubicación para el año actual
+            barrios_top_str = "N/A"
+            if 'ANIO' in df.columns:
+                df_act = df[df['ANIO'] == anio_act]
+                if not df_act.empty:
+                    partes = []
+                    # 1. Intentar Barrio
+                    barrio_col = next((c for c in df.columns if "barrio" in c.lower()), None)
+                    if barrio_col:
+                        exclusiones = ["SIN DATO", "SIN GEORREFERENCIA", "NO REPORTA", "SIN GEORREFERENCIACION", "N/A", "NO DETECTADO"]
+                        mask_valid = ~df_act[barrio_col].astype(str).str.upper().str.strip().isin(exclusiones)
+                        top_b = df_act[mask_valid][barrio_col].value_counts().head(2)
+                        if not top_b.empty:
+                            partes.append("Barrios: " + ", ".join([f"{b} ({int(cnt)})" for b, cnt in top_b.items()]))
+                    
+                    # 2. Intentar Zona
+                    zona_col = next((c for c in df.columns if "zona" in c.lower()), None)
+                    if zona_col:
+                        top_z = df_act[zona_col].value_counts()
+                        if not top_z.empty:
+                            partes.append("Zona: " + ", ".join([f"{z} ({int(cnt)})" for z, cnt in top_z.items()]))
+                            
+                    # 3. Intentar Clase de Sitio / Lugar
+                    sitio_col = next((c for c in df.columns if any(x in c.lower() for x in ["sitio", "lugar", "sector"])), None)
+                    if sitio_col:
+                        top_s = df_act[sitio_col].value_counts().head(2)
+                        if not top_s.empty:
+                            partes.append("Sitio: " + ", ".join([f"{s} ({int(cnt)})" for s, cnt in top_s.items()]))
+                            
+                    if partes:
+                        barrios_top_str = " | ".join(partes)
+
             resumen_grafica[nombre_delito] = {"actual": act, "anterior": ant}
             resumen_tabla.append({
                 "delito": nombre_delito,
@@ -106,7 +138,8 @@ class PDFGenerator:
                 "actual": int(act),
                 "variacion": var_str,
                 "estado": estado,
-                "ultimo_registro": ult_reg
+                "ultimo_registro": ult_reg,
+                "barrios_top": barrios_top_str
             })
 
         # Composición del documento
@@ -135,7 +168,15 @@ class PDFGenerator:
 
         # Tabla Resumen
         elements.append(Paragraph("Resumen de Indicadores Clave", styles['Heading2']))
-        table_data = [[Paragraph("Indicador", style_header_table), Paragraph(str(anio_ant), style_header_table), Paragraph(str(anio_act), style_header_table), Paragraph("Variación", style_header_table), Paragraph("Estado", style_header_table), Paragraph("Últ. Reg.", style_header_table)]]
+        table_data = [[
+            Paragraph("Indicador", style_header_table), 
+            Paragraph(str(anio_ant), style_header_table), 
+            Paragraph(str(anio_act), style_header_table), 
+            Paragraph("Variación", style_header_table), 
+            Paragraph("Estado", style_header_table), 
+            Paragraph("Últ. Reg.", style_header_table),
+            Paragraph("Zonas Calientes (2026)", style_header_table)
+        ]]
         
         for row in sorted(resumen_tabla, key=lambda x: x['actual'], reverse=True):
             color_stat = colors.red if row['estado'] == "SUBE" else (colors.green if row['estado'] == "BAJA" else colors.black)
@@ -145,10 +186,11 @@ class PDFGenerator:
                 Paragraph(f"<b>{row['actual']:,}</b>", ParagraphStyle('n', alignment=TA_CENTER)),
                 Paragraph(f"<b>{row['variacion']}</b>", ParagraphStyle('n', alignment=TA_CENTER, textColor=color_stat)),
                 Paragraph(row['estado'], ParagraphStyle('n', alignment=TA_CENTER, textColor=color_stat, fontSize=8)),
-                Paragraph(row.get('ultimo_registro', 'N/A'), ParagraphStyle('n', alignment=TA_CENTER, fontSize=8))
+                Paragraph(row.get('ultimo_registro', 'N/A'), ParagraphStyle('n', alignment=TA_CENTER, fontSize=8)),
+                Paragraph(row.get('barrios_top', 'N/A'), ParagraphStyle('b', fontSize=7.5, alignment=TA_LEFT))
             ])
 
-        main_table = Table(table_data, colWidths=[5.5*cm, 2*cm, 2*cm, 2.5*cm, 2.5*cm, 2.5*cm])
+        main_table = Table(table_data, colWidths=[4.0*cm, 1.5*cm, 1.5*cm, 2.0*cm, 1.8*cm, 1.8*cm, 5.4*cm])
         main_table.setStyle(TableStyle([
             ('BACKGROUND', (0,0), (-1,0), self.azul),
             ('GRID', (0,0), (-1,-1), 0.5, colors.grey),

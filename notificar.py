@@ -29,12 +29,14 @@ class Notifier:
         for r in sorted(resumen, key=lambda x: x['actual'], reverse=True)[:5]:
             color = "#C0392B" if r['estado'] == "SUBE" else ("#2E7D32" if r['estado'] == "BAJA" else "#606175")
             ult_reg = r.get('ultimo_registro', 'N/A')
+            barrios = r.get('barrios_top', 'N/A')
             rows_html += f"""
             <tr>
-                <td style="padding:10px; border-bottom:1px solid #eee;">{r['delito']}</td>
+                <td style="padding:10px; border-bottom:1px solid #eee;"><b>{r['delito']}</b></td>
                 <td style="padding:10px; border-bottom:1px solid #eee; text-align:center;">{r['actual']}</td>
                 <td style="padding:10px; border-bottom:1px solid #eee; text-align:center; color:{color}; font-weight:bold;">{r['variacion']}</td>
                 <td style="padding:10px; border-bottom:1px solid #eee; text-align:center; font-size: 11px;">{ult_reg}</td>
+                <td style="padding:10px; border-bottom:1px solid #eee; font-size: 11px; color:#555;">{barrios}</td>
             </tr>
             """
 
@@ -46,7 +48,7 @@ class Notifier:
         html = f"""
         <html>
         <body style="font-family: 'Segoe UI', Arial, sans-serif; background-color: #f4f4f8; margin: 0; padding: 20px;">
-            <div style="max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+            <div style="max-width: 650px; margin: 0 auto; background: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
                 <div style="background: {self.cfg['estetica']['azul']}; padding: 30px; color: white;">
                     <div style="font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: {self.cfg['estetica']['amarillo']}; font-weight: bold;">Alcaldía de Jamundí</div>
                     <h1 style="margin: 10px 0 0; font-size: 22px;">{titulo}</h1>
@@ -58,10 +60,11 @@ class Notifier:
                     <h3 style="color: {self.cfg['estetica']['azul']}; font-size: 14px; text-transform: uppercase;">Resumen de Indicadores Top</h3>
                     <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
                         <tr style="background: #f8f9fa;">
-                            <th style="padding: 10px; text-align: left; border-bottom: 2px solid #ddd;">Indicador</th>
-                            <th style="padding: 10px; text-align: center; border-bottom: 2px solid #ddd;">Actual</th>
-                            <th style="padding: 10px; text-align: center; border-bottom: 2px solid #ddd;">Var.</th>
-                            <th style="padding: 10px; text-align: center; border-bottom: 2px solid #ddd;">Últ. Reg.</th>
+                            <th style="padding: 10px; text-align: left; border-bottom: 2px solid #ddd; width: 25%;">Indicador</th>
+                            <th style="padding: 10px; text-align: center; border-bottom: 2px solid #ddd; width: 12%;">Actual</th>
+                            <th style="padding: 10px; text-align: center; border-bottom: 2px solid #ddd; width: 12%;">Var.</th>
+                            <th style="padding: 10px; text-align: center; border-bottom: 2px solid #ddd; width: 16%;">Últ. Reg.</th>
+                            <th style="padding: 10px; text-align: left; border-bottom: 2px solid #ddd; width: 35%;">Zonas Calientes (2026)</th>
                         </tr>
                         {rows_html}
                     </table>
