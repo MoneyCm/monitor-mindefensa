@@ -1,5 +1,5 @@
 {
-  "ultima_revision": "2026-06-30T15:35:15.052135",
+  "ultima_revision": "2026-07-08T00:02:19.748746",
   "archivos": {
     "AFECTACIÓN A LA FUERZA PÚBLICA.xlsx": {
       "fecha": {
@@ -8,33 +8,12 @@
       },
       "id": "CONT9DC8FFA70F73409DBD3B60EBAF72A7C3"
     },
-    "DELITOS SEXUALES.xlsx": {
+    "DELITOS CONTRA EL MEDIO AMBIENTE.xlsx": {
       "fecha": {
-        "value": "2026-06-17T22:14:58.045Z",
+        "value": "2026-06-17T21:52:52.118Z",
         "timezone": "UTC"
       },
-      "id": "CONTEBEA4A10A270484195D139CF815742F3"
-    },
-    "CAPTURAS POR MINERÍA ILEGAL.xlsx": {
-      "fecha": {
-        "value": "2026-06-17T21:34:20.263Z",
-        "timezone": "UTC"
-      },
-      "id": "CONT4F7084E366154CD1B233DEE8C36998A6"
-    },
-    "INCAUTACIONES MINERIA.xlsx": {
-      "fecha": {
-        "value": "2026-06-17T21:35:01.485Z",
-        "timezone": "UTC"
-      },
-      "id": "CONTD4C1B83B821F41B3BB75F85A518B52A1"
-    },
-    "MINAS INTERVENIDAS.xlsx": {
-      "fecha": {
-        "value": "2026-06-17T21:34:10.830Z",
-        "timezone": "UTC"
-      },
-      "id": "CONTD646BAB2D93A4EAC8A25B182A38EDDF8"
+      "id": "CONT8A90C91C09374BC0BBD44108E631B2B1"
     },
     "PUENTES Y VÍAS.xlsx": {
       "fecha": {
@@ -57,6 +36,20 @@
       },
       "id": "CONTA4D0847400934551B61A93D9C6B0E521"
     },
+    "DELITOS INFORMÁTICOS.xlsx": {
+      "fecha": {
+        "value": "2026-06-17T22:15:42.144Z",
+        "timezone": "UTC"
+      },
+      "id": "CONT92AC3B93285642069C008C997FA6F8DA"
+    },
+    "VIOLENCIA INTRAFAMILIAR.xlsx": {
+      "fecha": {
+        "value": "2026-06-17T22:11:24.385Z",
+        "timezone": "UTC"
+      },
+      "id": "CONT93A3E06E0C134EF197783385D56AABBF"
+    },
     "SECUESTRO.xlsx": {
       "fecha": {
         "value": "2026-06-17T22:12:37.963Z",
@@ -70,6 +63,34 @@
         "timezone": "UTC"
       },
       "id": "CONT03B8C922E3C54A1698E6FE92BDA66FB4"
+    },
+    "CAPTURAS POR MINERÍA ILEGAL.xlsx": {
+      "fecha": {
+        "value": "2026-06-17T21:34:20.263Z",
+        "timezone": "UTC"
+      },
+      "id": "CONT4F7084E366154CD1B233DEE8C36998A6"
+    },
+    "INCAUTACIONES MINERIA.xlsx": {
+      "fecha": {
+        "value": "2026-06-17T21:35:01.485Z",
+        "timezone": "UTC"
+      },
+      "id": "CONTD4C1B83B821F41B3BB75F85A518B52A1"
+    },
+    "MINAS INTERVENIDAS.xlsx": {
+      "fecha": {
+        "value": "2026-06-17T21:34:10.830Z",
+        "timezone": "UTC"
+      },
+      "id": "CONTD646BAB2D93A4EAC8A25B182A38EDDF8"
+    },
+    "DELITOS SEXUALES.xlsx": {
+      "fecha": {
+        "value": "2026-06-17T22:14:58.045Z",
+        "timezone": "UTC"
+      },
+      "id": "CONTEBEA4A10A270484195D139CF815742F3"
     },
     "DESMOVILIZADOS ELN.xlsx": {
       "fecha": {
@@ -91,13 +112,6 @@
         "timezone": "UTC"
       },
       "id": "CONT9DFC7BF965144F9DB8FD36DAA77CBBE6"
-    },
-    "DELITOS CONTRA EL MEDIO AMBIENTE.xlsx": {
-      "fecha": {
-        "value": "2026-06-17T21:52:52.118Z",
-        "timezone": "UTC"
-      },
-      "id": "CONT8A90C91C09374BC0BBD44108E631B2B1"
     },
     "ASPERSION.xlsx": {
       "fecha": {
@@ -169,13 +183,6 @@
       },
       "id": "CONT1BA5A5E4535848B0906C0319B89A667F"
     },
-    "DELITOS INFORMÁTICOS.xlsx": {
-      "fecha": {
-        "value": "2026-06-17T22:15:42.144Z",
-        "timezone": "UTC"
-      },
-      "id": "CONT92AC3B93285642069C008C997FA6F8DA"
-    },
     "HOMICIDIO ACCIDENTES DE TRÁNSITO.xlsx": {
       "fecha": {
         "value": "2026-06-17T21:47:34.599Z",
@@ -210,13 +217,6 @@
         "timezone": "UTC"
       },
       "id": "CONT7B88CCACEDD441E3984D326E3696DB5E"
-    },
-    "VIOLENCIA INTRAFAMILIAR.xlsx": {
-      "fecha": {
-        "value": "2026-06-17T22:11:24.385Z",
-        "timezone": "UTC"
-      },
-      "id": "CONT93A3E06E0C134EF197783385D56AABBF"
     },
     "EXTORSIÓN.xlsx": {
       "fecha": {
