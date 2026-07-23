@@ -37,6 +37,17 @@ def main():
 
     force_env = os.environ.get("FORCE_DOWNLOAD", "false").lower() == "true"
 
+    # 3.5. Si no hay cambios y no se forzó manualmente → no generar ni enviar nada
+    if not nuevos and not cambiados and not force_env:
+        log.info("Sin cambios en el portal de MinDefensa. No se generará reporte ni se enviará correo.")
+        state.save(archivos_detectados, 0, 0)
+        if 'GITHUB_OUTPUT' in os.environ:
+            with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+                f.write("hay_cambios=false\n")
+        return
+
+    log.info(f"Cambios detectados: {len(nuevos)} nuevos, {len(cambiados)} actualizados. Procesando...")
+
     # 4. Determinar tipo de ejecución según el día
     hoy = datetime.now()
     dia_semana = hoy.weekday() # 0=Lunes, 1=Martes, ..., 4=Viernes
@@ -45,15 +56,11 @@ def main():
     if dia_semana == 1: 
         tipo_run = "reunion"
     elif dia_semana == 4:
-        # Si al sumar 7 días cambia el mes, es el último viernes del mes (semana del Consejo)
         from datetime import timedelta
         if (hoy + timedelta(days=7)).month != hoy.month:
             tipo_run = "consejo"
     
-    if not nuevos and not cambiados:
-        log.info("No se detectaron cambios en el portal. Se generará el reporte con archivos locales en caché.")
-
-    # Descargar solo archivos nuevos o cambiados (o todos si es día especial / FORCE_DOWNLOAD)
+    # Descargar todos si es día especial o FORCE_DOWNLOAD, si no solo los cambiados
     force_all = force_env or tipo_run != "normal"
     
     para_descargar = []
