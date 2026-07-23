@@ -1,121 +1,146 @@
-[
-  {
-    "delito": "Violencia Intrafamiliar",
-    "anterior": 0,
-    "actual": 0,
-    "variacion": "N/A",
-    "estado": "SIN DATOS"
-  },
-  {
-    "delito": "Secuestro",
-    "anterior": 0,
-    "actual": 4,
-    "variacion": "N/A",
-    "estado": "NUEVO"
-  },
-  {
-    "delito": "Trata de Personas",
-    "anterior": 0,
-    "actual": 0,
-    "variacion": "N/A",
-    "estado": "SIN DATOS"
-  },
-  {
-    "delito": "Delitos Informáticos",
-    "anterior": 63,
-    "actual": 77,
-    "variacion": "+22.2%",
-    "estado": "SUBE"
-  },
-  {
-    "delito": "Extorsión",
-    "anterior": 5,
-    "actual": 10,
-    "variacion": "+100.0%",
-    "estado": "SUBE"
-  },
-  {
-    "delito": "Hurtos a Comercio",
-    "anterior": 22,
-    "actual": 15,
-    "variacion": "-31.8%",
-    "estado": "BAJA"
-  },
-  {
-    "delito": "Hurtos a Residencias",
-    "anterior": 16,
-    "actual": 15,
-    "variacion": "-6.2%",
-    "estado": "BAJA"
-  },
-  {
-    "delito": "Abigeato",
-    "anterior": 0,
-    "actual": 0,
-    "variacion": "N/A",
-    "estado": "SIN DATOS"
-  },
-  {
-    "delito": "Hurtos de Vehículos",
-    "anterior": 61,
-    "actual": 82,
-    "variacion": "+34.4%",
-    "estado": "SUBE"
-  },
-  {
-    "delito": "Hurtos a Personas",
-    "anterior": 142,
-    "actual": 142,
-    "variacion": "+0.0%",
-    "estado": "IGUAL"
-  },
-  {
-    "delito": "Piratería Terrestre",
-    "anterior": 0,
-    "actual": 0,
-    "variacion": "N/A",
-    "estado": "SIN DATOS"
-  },
-  {
-    "delito": "Terrorismo",
-    "anterior": 4,
-    "actual": 1,
-    "variacion": "-75.0%",
-    "estado": "BAJA"
-  },
-  {
-    "delito": "Homicidios Tránsito",
-    "anterior": 3,
-    "actual": 5,
-    "variacion": "+66.7%",
-    "estado": "SUBE"
-  },
-  {
-    "delito": "Homicidios",
-    "anterior": 30,
-    "actual": 20,
-    "variacion": "-33.3%",
-    "estado": "BAJA"
-  },
-  {
-    "delito": "Lesiones Tránsito",
-    "anterior": 59,
-    "actual": 83,
-    "variacion": "+40.7%",
-    "estado": "SUBE"
-  },
-  {
-    "delito": "Lesiones Personales",
-    "anterior": 98,
-    "actual": 71,
-    "variacion": "-27.6%",
-    "estado": "BAJA"
-  },
-  {
-    "delito": "Masacres",
-    "anterior": 2,
-    "actual": 0,
-    "variacion": "-100.0%",
-    "estado": "BAJA"
-  }
-]
+{
+  "mes_corte": "Enero",
+  "anio_act": 2026,
+  "indicadores": [
+    {
+      "delito": "Homicidios",
+      "anterior": 10,
+      "actual": 12,
+      "diffAbs": 2,
+      "varPct": "+20.0%",
+      "estado": "SUBE",
+      "ultimo_registro": "31/01/2026",
+      "barrios_top": "Sin datos de barrio"
+    },
+    {
+      "delito": "Hurtos a Personas",
+      "anterior": 46,
+      "actual": 40,
+      "diffAbs": -6,
+      "varPct": "-13.0%",
+      "estado": "BAJA",
+      "ultimo_registro": "31/01/2026",
+      "barrios_top": "Sin datos de barrio"
+    },
+    {
+      "delito": "Hurtos a Comercio",
+      "anterior": 7,
+      "actual": 5,
+      "diffAbs": -2,
+      "varPct": "-28.6%",
+      "estado": "BAJA",
+      "ultimo_registro": "31/01/2026",
+      "barrios_top": "Sin datos de barrio"
+    },
+    {
+      "delito": "Hurtos a Residencias",
+      "anterior": 10,
+      "actual": 4,
+      "diffAbs": -6,
+      "varPct": "-60.0%",
+      "estado": "BAJA",
+      "ultimo_registro": "27/01/2026",
+      "barrios_top": "Sin datos de barrio"
+    },
+    {
+      "delito": "Hurtos de Vehículos",
+      "anterior": 18,
+      "actual": 25,
+      "diffAbs": 7,
+      "varPct": "+38.9%",
+      "estado": "SUBE",
+      "ultimo_registro": "30/01/2026",
+      "barrios_top": "Sin datos de barrio"
+    },
+    {
+      "delito": "Extorsión",
+      "anterior": 3,
+      "actual": 0,
+      "diffAbs": -3,
+      "varPct": "-100.0%",
+      "estado": "BAJA",
+      "ultimo_registro": "25/11/2025",
+      "barrios_top": "Sin datos de barrio"
+    },
+    {
+      "delito": "Secuestro",
+      "anterior": 0,
+      "actual": 0,
+      "diffAbs": 0,
+      "varPct": "N/A",
+      "estado": "IGUAL",
+      "ultimo_registro": "27/12/2025",
+      "barrios_top": "Sin datos de barrio"
+    },
+    {
+      "delito": "Terrorismo",
+      "anterior": 4,
+      "actual": 0,
+      "diffAbs": -4,
+      "varPct": "-100.0%",
+      "estado": "BAJA",
+      "ultimo_registro": "20/11/2025",
+      "barrios_top": "Sin datos de barrio"
+    },
+    {
+      "delito": "Delitos Sexuales",
+      "anterior": 8,
+      "actual": 9,
+      "diffAbs": 1,
+      "varPct": "+12.5%",
+      "estado": "SUBE",
+      "ultimo_registro": "22/01/2026",
+      "barrios_top": "Sin datos de barrio"
+    },
+    {
+      "delito": "Violencia Intrafamiliar",
+      "anterior": 25,
+      "actual": 35,
+      "diffAbs": 10,
+      "varPct": "+40.0%",
+      "estado": "SUBE",
+      "ultimo_registro": "31/01/2026",
+      "barrios_top": "Sin datos de barrio"
+    },
+    {
+      "delito": "Lesiones Personales",
+      "anterior": 30,
+      "actual": 23,
+      "diffAbs": -7,
+      "varPct": "-23.3%",
+      "estado": "BAJA",
+      "ultimo_registro": "31/01/2026",
+      "barrios_top": "Sin datos de barrio"
+    },
+    {
+      "delito": "Masacres",
+      "anterior": 1,
+      "actual": 0,
+      "diffAbs": -1,
+      "varPct": "-100.0%",
+      "estado": "BAJA",
+      "ultimo_registro": "10/06/2025",
+      "barrios_top": "Sin datos de barrio"
+    },
+    {
+      "delito": "Trata de Personas",
+      "anterior": 0,
+      "actual": 0,
+      "diffAbs": 0,
+      "varPct": "N/A",
+      "estado": "IGUAL",
+      "ultimo_registro": "20/08/2024",
+      "barrios_top": "Sin datos de barrio"
+    },
+    {
+      "delito": "Piratería Terrestre",
+      "anterior": 0,
+      "actual": 0,
+      "diffAbs": 0,
+      "varPct": "N/A",
+      "estado": "IGUAL",
+      "ultimo_registro": "11/12/2022",
+      "barrios_top": "Sin datos de barrio"
+    }
+  ]
+}

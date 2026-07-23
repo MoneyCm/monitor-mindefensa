@@ -1,35 +1,39 @@
 import os
 import sys
+import yaml
 from pathlib import Path
 from procesador import DataProcessor
 from generar_reporte import PDFGenerator
 
-print("🧪 PROBANDO GENERADOR DE REPORTES PDF SISC...")
+print("🧪 PROBANDO GENERADOR DE REPORTES PDF SISC (TODOS LOS DELITOS)...")
 print("="*60)
 
-# Cargar archivos locales del monitor
-processor = DataProcessor()
-archivos = {
-    "Homicidios": "HOMICIDIO INTENCIONAL.xlsx",
-    "Secuestro": "SECUESTRO.xlsx",
-    "Hurtos a Personas": "HURTO PERSONAS.xlsx",
-    "Violencia Intrafamiliar": "VIOLENCIA INTRAFAMILIAR.xlsx"
-}
+# Cargar Configuración
+with open("config.yaml", "r", encoding="utf-8") as f:
+    cfg = yaml.safe_load(f)
 
+processor = DataProcessor()
 resultados = {}
-for delito, arch in archivos.items():
-    ruta = Path(arch)
-    if not ruta.exists():
-        print(f"⚠️ Archivo {arch} no encontrado localmente. Saltando.")
-        continue
+
+# Detectar y procesar todos los delitos configurados
+for d in cfg['datasets']:
+    nombre_dataset = d['nombre']
+    patron = d['patron'].upper()
     
-    print(f"⚙️ Procesando {delito} ({arch})...")
-    res = processor.procesar_archivo(ruta)
-    if res and "error" not in res:
-        resultados[delito] = res
-        print(f"   Conteo Jamundí: {res['total_jamundi']} casos.")
+    # Buscar archivo local que coincida con el patrón
+    archivos_locales = list(Path(".").glob("*.xlsx"))
+    archivo_encontrado = next((a for a in archivos_locales if patron in a.name.upper() and not a.name.startswith("~$")), None)
+    
+    if archivo_encontrado:
+        print(f"⚙️ Procesando {nombre_dataset} ({archivo_encontrado.name})...")
+        res = processor.procesar_archivo(archivo_encontrado)
+        if res and "error" not in res:
+            resultados[nombre_dataset] = res
+            print(f"   Conteo Jamundí: {res['total_jamundi']} casos.")
+        else:
+            print(f"   ❌ Error ETL en {archivo_encontrado.name}: {res.get('error') if res else 'Desconocido'}")
     else:
-        print(f"   ❌ Error ETL: {res.get('error') if res else 'Desconocido'}")
+        print(f"⚠️ No se encontró archivo local para el patrón: {patron}")
 
 if not resultados:
     print("❌ No se pudieron procesar datos. Deteniendo.")

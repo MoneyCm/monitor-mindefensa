@@ -408,79 +408,89 @@ class PDFGenerator:
             elements.append(Image(graf_path, 18*cm, 5.76*cm)) # 10:3.2 ratio
             elements.append(Spacer(1, 0.3*cm))
 
-        # Tabla 1: Comparativo Acumulado YTD (Top 5)
-        elements.append(Paragraph("<b>4. COMPARATIVO ACUMULADO POR DELITO (YTD)</b>", ParagraphStyle('st3', fontName='Helvetica-Bold', fontSize=10, textColor=self.azul)))
-        elements.append(Spacer(1, 0.1*cm))
+        # Estilos específicos para la tabla compacta paralela
+        style_th_comp = ParagraphStyle('THC', fontName='Helvetica-Bold', fontSize=7, textColor=colors.white, alignment=TA_CENTER)
+        style_td_comp = ParagraphStyle('TDC', fontName='Helvetica', fontSize=7, alignment=TA_CENTER)
+        style_td_comp_left = ParagraphStyle('TDCL', fontName='Helvetica', fontSize=7, alignment=TA_LEFT)
+        style_td_comp_bold = ParagraphStyle('TDCB', fontName='Helvetica-Bold', fontSize=7, alignment=TA_CENTER)
 
+        # Tabla 1: Comparativo Acumulado YTD (Todos)
         ytd_table_data = [[
-            Paragraph("Delito", style_th), 
-            Paragraph(f"{anio_ant} acum.", style_th), 
-            Paragraph(f"{anio_act} acum.", style_th), 
-            Paragraph("Diferencia", style_th), 
-            Paragraph("Variación %", style_th)
+            Paragraph("Delito", style_th_comp), 
+            Paragraph(f"{anio_ant}", style_th_comp), 
+            Paragraph(f"{anio_act}", style_th_comp), 
+            Paragraph("Dif", style_th_comp), 
+            Paragraph("Var%", style_th_comp)
         ]]
 
-        ytd_rows = sorted(resumen_tabla, key=lambda x: x['actual'], reverse=True)[:5]
+        ytd_rows = sorted(resumen_tabla, key=lambda x: x['actual'], reverse=True)
         for row in ytd_rows:
             color_var = colors.HexColor("#B91C1C") if row['diffAbs'] > 0 else (colors.HexColor("#15803D") if row['diffAbs'] < 0 else colors.black)
             ytd_table_data.append([
-                Paragraph(row['delito'], style_td_left),
-                Paragraph(f"{row['anterior']:,}", style_td),
-                Paragraph(f"<b>{row['actual']:,}</b>", style_td_bold),
-                Paragraph(f"<b>{row['diffAbs']:+,}</b>", ParagraphStyle('d', alignment=TA_CENTER, textColor=color_var, fontSize=8)),
-                Paragraph(f"<b>{row['varPct']}</b>", ParagraphStyle('v', alignment=TA_CENTER, textColor=color_var, fontSize=8))
+                Paragraph(row['delito'], style_td_comp_left),
+                Paragraph(f"{row['anterior']:,}", style_td_comp),
+                Paragraph(f"<b>{row['actual']:,}</b>", style_td_comp_bold),
+                Paragraph(f"<b>{row['diffAbs']:+,}</b>", ParagraphStyle('d', alignment=TA_CENTER, textColor=color_var, fontSize=7)),
+                Paragraph(f"<b>{row['varPct']}</b>", ParagraphStyle('v', alignment=TA_CENTER, textColor=color_var, fontSize=7))
             ])
 
-        ytd_table = Table(ytd_table_data, colWidths=[7.0*cm, 2.5*cm, 2.5*cm, 3.0*cm, 3.0*cm])
+        # Ancho total = 8.7cm
+        ytd_table = Table(ytd_table_data, colWidths=[2.9*cm, 1.3*cm, 1.3*cm, 1.4*cm, 1.8*cm])
         ytd_table.setStyle(TableStyle([
             ('BACKGROUND', (0,0), (-1,0), self.azul),
             ('GRID', (0,0), (-1,-1), 0.5, self.gris_borde),
             ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
-            ('ROWPADDING', (0,0), (-1,-1), 4),
+            ('ROWPADDING', (0,0), (-1,-1), 3),
             ('ROWBACKGROUNDS', (0,1), (-1,-1), [colors.white, self.gris_fondo])
         ]))
-        elements.append(ytd_table)
-        elements.append(Spacer(1, 0.3*cm))
 
-        # Tabla 2: Comparativo Puntual del Periodo (Top 5)
-        elements.append(Paragraph(f"<b>5. COMPARATIVO PUNTUAL ({mes_nombre.upper()})</b>", ParagraphStyle('st4', fontName='Helvetica-Bold', fontSize=10, textColor=self.azul)))
-        elements.append(Spacer(1, 0.1*cm))
-
+        # Tabla 2: Comparativo Puntual del Periodo (Todos)
         puntual_table_data = [[
-            Paragraph("Delito", style_th), 
-            Paragraph(f"Mismo Per. {anio_ant}", style_th), 
-            Paragraph("Per. Actual", style_th), 
-            Paragraph("Per. Anterior", style_th), 
-            Paragraph("Var. YoY", style_th), 
-            Paragraph("Var. PoP", style_th)
+            Paragraph("Delito", style_th_comp), 
+            Paragraph(f"Ant {anio_ant}", style_th_comp), 
+            Paragraph("Act", style_th_comp), 
+            Paragraph("Ant", style_th_comp), 
+            Paragraph("YoY", style_th_comp), 
+            Paragraph("PoP", style_th_comp)
         ]]
 
-        puntual_rows = sorted(resumen_puntual, key=lambda x: x['per_act'], reverse=True)[:5]
+        puntual_rows = sorted(resumen_puntual, key=lambda x: x['per_act'], reverse=True)
         for row in puntual_rows:
             color_yoy = colors.HexColor("#B91C1C") if row['diff_yoy'] > 0 else (colors.HexColor("#15803D") if row['diff_yoy'] < 0 else colors.black)
             color_pop = colors.HexColor("#B91C1C") if row['diff_pop'] > 0 else (colors.HexColor("#15803D") if row['diff_pop'] < 0 else colors.black)
             
-            # Formatear el nombre del delito
-            delito_label = row['delito']
-            
             puntual_table_data.append([
-                Paragraph(delito_label, style_td_left),
-                Paragraph(f"{row['mismo_per']:,}", style_td),
-                Paragraph(f"<b>{row['per_act']:,}</b>", style_td_bold),
-                Paragraph(f"{row['per_ant']:,}", style_td),
-                Paragraph(f"<b>{row['diff_yoy']:+,}</b>", ParagraphStyle('dy', alignment=TA_CENTER, textColor=color_yoy, fontSize=8)),
-                Paragraph(f"<b>{row['diff_pop']:+,}</b>", ParagraphStyle('dp', alignment=TA_CENTER, textColor=color_pop, fontSize=8))
+                Paragraph(row['delito'], style_td_comp_left),
+                Paragraph(f"{row['mismo_per']:,}", style_td_comp),
+                Paragraph(f"<b>{row['per_act']:,}</b>", style_td_comp_bold),
+                Paragraph(f"{row['per_ant']:,}", style_td_comp),
+                Paragraph(f"<b>{row['diff_yoy']:+,}</b>", ParagraphStyle('dy', alignment=TA_CENTER, textColor=color_yoy, fontSize=7)),
+                Paragraph(f"<b>{row['diff_pop']:+,}</b>", ParagraphStyle('dp', alignment=TA_CENTER, textColor=color_pop, fontSize=7))
             ])
 
-        puntual_table = Table(puntual_table_data, colWidths=[6.0*cm, 2.4*cm, 2.4*cm, 2.4*cm, 2.4*cm, 2.4*cm])
+        # Ancho total = 8.7cm
+        puntual_table = Table(puntual_table_data, colWidths=[2.5*cm, 1.25*cm, 1.25*cm, 1.25*cm, 1.25*cm, 1.2*cm])
         puntual_table.setStyle(TableStyle([
             ('BACKGROUND', (0,0), (-1,0), self.azul),
             ('GRID', (0,0), (-1,-1), 0.5, self.gris_borde),
             ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
-            ('ROWPADDING', (0,0), (-1,-1), 4),
+            ('ROWPADDING', (0,0), (-1,-1), 3),
             ('ROWBACKGROUNDS', (0,1), (-1,-1), [colors.white, self.gris_fondo])
         ]))
-        elements.append(puntual_table)
+
+        # Contenedor Maestro para alineación en paralelo
+        elements.append(Paragraph("<b>4. COMPARATIVOS ESTADÍSTICOS (ACUMULADO YTD Y COMPORTAMIENTO PUNTUAL DEL PERIODO)</b>", ParagraphStyle('st_master', fontName='Helvetica-Bold', fontSize=10, textColor=self.azul)))
+        elements.append(Spacer(1, 0.2*cm))
+        
+        master_table = Table([[ytd_table, "", puntual_table]], colWidths=[8.7*cm, 0.6*cm, 8.7*cm])
+        master_table.setStyle(TableStyle([
+            ('VALIGN', (0,0), (-1,-1), 'TOP'),
+            ('LEFTPADDING', (0,0), (-1,-1), 0),
+            ('RIGHTPADDING', (0,0), (-1,-1), 0),
+            ('TOPPADDING', (0,0), (-1,-1), 0),
+            ('BOTTOMPADDING', (0,0), (-1,-1), 0),
+        ]))
+        elements.append(master_table)
         elements.append(Spacer(1, 0.4*cm))
 
         # Bloque de Control Documental y Firma
