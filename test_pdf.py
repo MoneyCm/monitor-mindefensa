@@ -5,7 +5,7 @@ from pathlib import Path
 from procesador import DataProcessor
 from generar_reporte import PDFGenerator
 
-print("🧪 PROBANDO GENERADOR DE REPORTES PDF SISC (TODOS LOS DELITOS)...")
+print("🧪 PROBANDO GENERADOR DE REPORTES PDF SISC (DELITOS RECIENTES)...")
 print("="*60)
 
 # Cargar Configuración
@@ -15,13 +15,16 @@ with open("config.yaml", "r", encoding="utf-8") as f:
 processor = DataProcessor()
 resultados = {}
 
+# Carpeta de salida del scraper
+xlsx_dir = Path("mindefensa_xlsx")
+
 # Detectar y procesar todos los delitos configurados
 for d in cfg['datasets']:
     nombre_dataset = d['nombre']
     patron = d['patron'].upper()
     
-    # Buscar archivo local que coincida con el patrón
-    archivos_locales = list(Path(".").glob("*.xlsx"))
+    # Buscar archivo local que coincida con el patrón en mindefensa_xlsx
+    archivos_locales = list(xlsx_dir.glob("*.xlsx"))
     archivo_encontrado = next((a for a in archivos_locales if patron in a.name.upper() and not a.name.startswith("~$")), None)
     
     if archivo_encontrado:
