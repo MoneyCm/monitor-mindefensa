@@ -35,20 +35,9 @@ def main():
     
     log.info(f"Reporte de Cambios: {len(nuevos)} nuevos, {len(cambiados)} actualizados.")
 
-    # 3.5. Si no hay cambios ni archivos nuevos, y no se forzó explícitamente vía env, no hacer nada
     force_env = os.environ.get("FORCE_DOWNLOAD", "false").lower() == "true"
-    
-    if not nuevos and not cambiados and not force_env:
-        log.info("No se detectaron nuevos archivos ni actualizaciones en el portal de MinDefensa. Saltando procesamiento.")
-        state.save(archivos_detectados, 0, 0)
-        # Escribir output de GitHub para saltar pasos
-        if 'GITHUB_OUTPUT' in os.environ:
-            with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
-                f.write("hay_cambios=false\n")
-        return
 
-    # 4. Determinar si necesitamos descargar y procesar
-    # Forzamos descarga en días de reporte o si hay cambios
+    # 4. Determinar tipo de ejecución según el día
     hoy = datetime.now()
     dia_semana = hoy.weekday() # 0=Lunes, 1=Martes, ..., 4=Viernes
     tipo_run = "normal"
@@ -61,6 +50,10 @@ def main():
         if (hoy + timedelta(days=7)).month != hoy.month:
             tipo_run = "consejo"
     
+    if not nuevos and not cambiados:
+        log.info("No se detectaron cambios en el portal. Se generará el reporte con archivos locales en caché.")
+
+    # Descargar solo archivos nuevos o cambiados (o todos si es día especial / FORCE_DOWNLOAD)
     force_all = force_env or tipo_run != "normal"
     
     para_descargar = []
