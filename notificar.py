@@ -77,8 +77,8 @@ class Notifier:
                     <p style="color: #666; font-size: 13px; margin-top: 30px;">Para un análisis detallado, por favor consulte el archivo PDF adjunto.</p>
                     
                     <div style="margin-top: 30px; border-top: 1px solid #eee; padding-top: 15px;">
-                        <p style="margin: 0; font-size: 14px; font-weight: bold; color: {self.cfg['estetica']['azul']};">Elaborado por:</p>
-                        <p style="margin: 5px 0 0; font-size: 13px; color: #555;">César Alfonso Forero Molano<br>Profesional Secretaría de Seguridad y Convivencia</p>
+                        <p style="margin: 0; font-size: 14px; font-weight: bold; color: {self.cfg['estetica']['azul']};">Elaboró:</p>
+                        <p style="margin: 5px 0 0; font-size: 13px; color: #555;">César Alfonso Forero Molano<br>Observatorio del Delito</p>
                     </div>
                 </div>
                 <div style="background: #f8f9fa; padding: 20px; text-align: center; font-size: 11px; color: #999; border-top: 1px solid #eee;">
