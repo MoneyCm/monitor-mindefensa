@@ -43,7 +43,7 @@ class Notifier:
         asunto_prefijo = self.cfg['correo']['prefijo_reunion'] if tipo_run == "reunion" else \
                          (self.cfg['correo']['prefijo_consejo'] if tipo_run == "consejo" else "🔔 Actualización")
         
-        titulo = f"Boletín MinDefensa - Observatorio Jamundí"
+        titulo = "Actualizacion del respaldo historico - MinDefensa"
 
         html = f"""
         <html>
@@ -55,7 +55,7 @@ class Notifier:
                     <div style="font-size: 12px; margin-top: 5px; opacity: 0.8;">{fecha_str} | Generado Automáticamente</div>
                 </div>
                 <div style="padding: 30px;">
-                    <p style="color: #444; font-size: 15px; line-height: 1.6;">Cordial saludo,<br><br>Se adjunta el <b>Boletín de Seguridad Institucional (Fuente: MinDefensa)</b> con el análisis consolidado de las últimas actualizaciones de bases de datos nacionales.</p>
+                    <p style="color: #444; font-size: 15px; line-height: 1.6;">Cordial saludo,<br><br>MinDefensa publico una actualizacion de sus series historicas. Se adjunta el contraste para Jamundi como <b>respaldo de la informacion oficial de Policia Nacional</b>.</p>
                     
                     <h3 style="color: {self.cfg['estetica']['azul']}; font-size: 14px; text-transform: uppercase;">Resumen de Indicadores Top</h3>
                     <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
@@ -113,7 +113,7 @@ class Notifier:
         prefijo, html = self._generar_html(resumen, tipo_run, sha)
         
         msg = MIMEMultipart()
-        asunto = "Boletín MinDefensa"
+        asunto = "Actualizacion respaldo historico MinDefensa"
         if fecha_registro:
             asunto += f" - {fecha_registro.strip()}"
         msg['Subject'] = asunto

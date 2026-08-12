@@ -2,7 +2,7 @@ name: Anti-Inactivity Keepalive
 
 on:
   schedule:
-    - cron: "0 0 1 * *" # Ejecutar el primer día de cada mes
+    - cron: "17 1 1 * *" # Evita la franja de alta demanda del minuto 00
 
 jobs:
   keepalive:

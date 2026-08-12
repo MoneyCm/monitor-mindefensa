@@ -2,8 +2,7 @@ name: Monitor MinDefensa V2 Professional
 
 on:
   schedule:
-    - cron: "0 12 * * *"       # Diario 07:00 AM COL
-    - cron: "0 23 * * 2,5"     # Martes y Viernes Noche (Consejo/Reunión)
+    - cron: "17 12 * * *"      # Revision ligera diaria, 07:17 America/Bogota
   workflow_dispatch:           # Ejecución manual
     inputs:
       force_download:
@@ -15,8 +14,13 @@ on:
 jobs:
   monitor:
     runs-on: ubuntu-latest
+    timeout-minutes: 25
+    concurrency:
+      group: monitor-mindefensa
+      cancel-in-progress: false
     permissions:
       contents: write
+      id-token: write
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
@@ -30,14 +34,12 @@ jobs:
       - name: Instalar Dependencias
         run: |
           pip install -r requirements.txt
-          playwright install chromium
-          playwright install-deps chromium
 
-      - name: Restaurar Caché de Excel
-        uses: actions/cache@v4
+      - name: Restaurar cache de Excel
+        uses: actions/cache/restore@v4
         with:
           path: mindefensa_xlsx
-          key: mindefensa-xlsx-${{ github.run_id }}
+          key: mindefensa-xlsx-${{ hashFiles('mindefensa_state.json') }}
           restore-keys: |
             mindefensa-xlsx-
 
@@ -51,21 +53,34 @@ jobs:
           FORCE_DOWNLOAD: ${{ github.event.inputs.force_download || 'false' }}
         run: python main_monitor.py
 
+      - name: Registrar revision sin cambios
+        if: success() && steps.monitor_run.outputs.hay_cambios != 'true'
+        run: echo "Sin cambios remotos; no se descargaron archivos ni se envio correo."
+
       - name: Commit State Update
         if: success() && steps.monitor_run.outputs.hay_cambios == 'true'
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add -f mindefensa_state.json
+          git add -f mindefensa_state.json resumen_actual.json
           git commit -m "chore: update monitor state [skip ci]" || echo "No changes to commit"
           git push
 
-      - name: Guardar Caché de Excel
-        if: always()
+      - name: Guardar cache de Excel actualizado
+        if: success() && steps.monitor_run.outputs.hay_cambios == 'true'
         uses: actions/cache/save@v4
         with:
           path: mindefensa_xlsx
-          key: mindefensa-xlsx-${{ github.run_id }}
+          key: mindefensa-xlsx-${{ hashFiles('mindefensa_state.json') }}
+
+      - name: Reportar estado al Centro de fuentes SISC
+        if: always()
+        continue-on-error: true
+        env:
+          SISC_API_URL: "https://sisc-backend.onrender.com/api"
+          SISC_MONITOR_OUTCOME: ${{ job.status }}
+          DATA_CHANGED: ${{ steps.monitor_run.outputs.hay_cambios }}
+        run: python sisc_heartbeat.py
 
       - name: Alerta de Fallo
         if: failure()
