@@ -143,8 +143,11 @@ def main():
         exporter.exportar(resultados)
         
         # 9. Notificar
-        notifier = Notifier()
-        notifier.enviar(pdf_path, tipo_run=tipo_run)
+        if os.environ.get("SEND_EMAIL", "true").strip().lower() == "true":
+            notifier = Notifier()
+            notifier.enviar(pdf_path, tipo_run=tipo_run)
+        else:
+            log.info("Correo omitido por configuracion de la ejecucion manual.")
 
     # Output GitHub Actions
     if 'GITHUB_OUTPUT' in os.environ:
