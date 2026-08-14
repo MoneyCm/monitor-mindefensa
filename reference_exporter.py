@@ -15,6 +15,15 @@ from logger import log
 
 
 class ReferenceExporter:
+    PRIORITY_DATASETS = (
+        "HOMICIDIO INTENCIONAL",
+        "HURTO PERSONAS",
+        "HURTO DE VEH",
+        "EXTORSI",
+        "VIOLENCIA INTRAFAMILIAR",
+        "LESIONES COMUNES",
+    )
+
     def __init__(self) -> None:
         self.api_url = os.getenv("SISC_API_URL", "https://sisc-backend.onrender.com/api").strip()
         self.token = os.getenv("SISC_TOKEN", "").strip()
@@ -51,6 +60,11 @@ class ReferenceExporter:
         return f"{base}/api/intelligence/reference-upload"
 
     def export_file(self, path: Path, source_cutoff: Optional[str] = None) -> bool:
+        normalized_name = path.name.upper()
+        if not any(pattern in normalized_name for pattern in self.PRIORITY_DATASETS):
+            log.info(f"Referencia territorial no requerida para: {path.name}")
+            return False
+
         endpoint = self._endpoint()
         authorization_token = self.token or self._github_oidc_token()
         if not endpoint or not authorization_token:
