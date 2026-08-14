@@ -123,6 +123,16 @@
       "barrios_top": "Sin datos de barrio"
     },
     {
+      "delito": "Violencia Intrafamiliar",
+      "anterior": 92,
+      "actual": 152,
+      "diffAbs": 60,
+      "varPct": "+65.2%",
+      "estado": "SUBE",
+      "ultimo_registro": "25/06/2026",
+      "barrios_top": "Sin datos de barrio"
+    },
+    {
       "delito": "Delitos Sexuales",
       "anterior": 59,
       "actual": 53,
