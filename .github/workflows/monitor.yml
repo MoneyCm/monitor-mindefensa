@@ -15,11 +15,16 @@ on:
         required: false
         default: false
         type: boolean
+      sync_reference:
+        description: 'Cargar agregados nacionales para los comparadores regional y nacional'
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   monitor:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 60
     concurrency:
       group: monitor-mindefensa
       cancel-in-progress: false
@@ -56,6 +61,7 @@ jobs:
           SISC_TOKEN: ${{ secrets.SISC_TOKEN }}
           SISC_API_URL: ${{ secrets.SISC_API_URL }}
           FORCE_DOWNLOAD: ${{ github.event.inputs.force_download || 'false' }}
+          SYNC_REFERENCE: ${{ github.event.inputs.sync_reference || 'false' }}
           SEND_EMAIL: ${{ github.event_name != 'workflow_dispatch' || inputs.notify == true }}
         run: python main_monitor.py
 

@@ -10,6 +10,7 @@ from estado import StateManager
 from procesador import DataProcessor
 from generar_reporte import PDFGenerator
 from exportar_sisc import SISCExporter
+from reference_exporter import ReferenceExporter
 from notificar import Notifier
 
 def main():
@@ -36,6 +37,7 @@ def main():
     log.info(f"Reporte de Cambios: {len(nuevos)} nuevos, {len(cambiados)} actualizados.")
 
     force_env = os.environ.get("FORCE_DOWNLOAD", "false").lower() == "true"
+    sync_reference = os.environ.get("SYNC_REFERENCE", "false").lower() == "true"
 
     # 3.5. Si no hay cambios y no se forzó manualmente → no generar ni enviar nada
     if not nuevos and not cambiados and not force_env:
@@ -72,6 +74,8 @@ def main():
 
     # 5. Descarga y Procesamiento
     processor = DataProcessor()
+    reference_exporter = ReferenceExporter() if sync_reference else None
+    reference_uploads = 0
     resultados = {}
     
     # Filtrar solo archivos de interés basados en patrones de config
@@ -90,6 +94,9 @@ def main():
             if r.status_code == 200:
                 ruta_local = processor.output_dir / a['nombre']
                 ruta_local.write_bytes(r.content)
+
+                if reference_exporter and reference_exporter.export_file(ruta_local):
+                    reference_uploads += 1
                 
                 # Procesar ETL
                 log.info(f"Procesando ETL: {a['nombre']}")
@@ -156,6 +163,8 @@ def main():
             f.write(f"reporte_generado={str(reporte_ok).lower()}\n")
 
     log.info("PIPELINE COMPLETADO EXITOSAMENTE")
+    if sync_reference:
+        log.info(f"Referencia territorial sincronizada en {reference_uploads} archivo(s).")
 
 if __name__ == "__main__":
     try:
