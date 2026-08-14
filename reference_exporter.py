@@ -3,8 +3,11 @@
 from __future__ import annotations
 
 import os
+import json
 from pathlib import Path
 from typing import Optional
+from urllib.parse import urlencode
+from urllib.request import Request, urlopen
 
 import requests
 
@@ -13,8 +16,27 @@ from logger import log
 
 class ReferenceExporter:
     def __init__(self) -> None:
-        self.api_url = os.getenv("SISC_API_URL", "").strip()
+        self.api_url = os.getenv("SISC_API_URL", "https://sisc-backend.onrender.com/api").strip()
         self.token = os.getenv("SISC_TOKEN", "").strip()
+
+    @staticmethod
+    def _github_oidc_token() -> Optional[str]:
+        request_url = os.getenv("ACTIONS_ID_TOKEN_REQUEST_URL", "").strip()
+        request_token = os.getenv("ACTIONS_ID_TOKEN_REQUEST_TOKEN", "").strip()
+        if not request_url or not request_token:
+            return None
+        separator = "&" if "?" in request_url else "?"
+        request = Request(
+            f"{request_url}{separator}{urlencode({'audience': 'sisc-source-center'})}",
+            headers={"Authorization": f"Bearer {request_token}"},
+        )
+        try:
+            with urlopen(request, timeout=10) as response:
+                payload = json.loads(response.read().decode("utf-8"))
+            return str(payload.get("value")) if payload.get("value") else None
+        except (OSError, ValueError) as error:
+            log.warning(f"No se pudo solicitar la identidad OIDC: {error}")
+            return None
 
     def _endpoint(self) -> Optional[str]:
         if not self.api_url:
@@ -30,12 +52,13 @@ class ReferenceExporter:
 
     def export_file(self, path: Path, source_cutoff: Optional[str] = None) -> bool:
         endpoint = self._endpoint()
-        if not endpoint or not self.token:
-            log.warning("Referencia territorial omitida: falta SISC_API_URL o SISC_TOKEN.")
+        authorization_token = self.token or self._github_oidc_token()
+        if not endpoint or not authorization_token:
+            log.warning("Referencia territorial omitida: no hay identidad OIDC ni token SISC.")
             return False
 
         data = {"source_cutoff": source_cutoff} if source_cutoff else {}
-        headers = {"Authorization": f"Bearer {self.token}"}
+        headers = {"Authorization": f"Bearer {authorization_token}"}
         try:
             with path.open("rb") as stream:
                 response = requests.post(
