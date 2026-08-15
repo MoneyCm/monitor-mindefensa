@@ -95,7 +95,7 @@ def main():
                 ruta_local = processor.output_dir / a['nombre']
                 ruta_local.write_bytes(r.content)
 
-                if reference_exporter and reference_exporter.export_file(ruta_local):
+                if reference_exporter and reference_exporter.export_file(ruta_local, a.get("fecha")):
                     reference_uploads += 1
                 
                 # Procesar ETL
