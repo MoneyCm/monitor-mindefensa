@@ -42,6 +42,27 @@ class MindefensaHeartbeatTests(unittest.TestCase):
         self.assertEqual(payload["status"], "ERROR")
         self.assertFalse(send_heartbeat(payload, service_key="", oidc_token=""))
 
+    def test_failure_includes_reference_sync_diagnostic(self):
+        diagnostics = Path.cwd() / ".test-monitor-diagnostics.json"
+        self.addCleanup(diagnostics.unlink, missing_ok=True)
+        diagnostics.write_text(
+            json.dumps(
+                {
+                    "reference_sync": {
+                        "attempted": 6,
+                        "uploaded": 5,
+                        "failures": ["HURTO PERSONAS.xlsx: HTTP 502: Bad Gateway"],
+                    }
+                }
+            ),
+            encoding="utf-8",
+        )
+
+        payload = build_payload(diagnostics_path=diagnostics, outcome="failure")
+
+        self.assertEqual(payload["details"]["diagnostics"]["reference_sync"]["uploaded"], 5)
+        self.assertIn("HURTO PERSONAS.xlsx", payload["warnings"][1])
+
 
 if __name__ == "__main__":
     unittest.main()

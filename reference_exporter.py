@@ -7,6 +7,7 @@ import json
 import os
 from pathlib import Path
 import re
+import time
 from typing import Optional
 import unicodedata
 from urllib.parse import urlencode
@@ -34,6 +35,7 @@ class ReferenceExporter:
     def __init__(self) -> None:
         self.api_url = os.getenv("SISC_API_URL", "https://sisc-backend.onrender.com/api").strip()
         self.token = os.getenv("SISC_TOKEN", "").strip()
+        self.failures: list[str] = []
 
     @staticmethod
     def _normalize(value: object) -> str:
@@ -190,27 +192,59 @@ class ReferenceExporter:
             return False
 
         endpoint = self._endpoint()
-        authorization_token = self.token or self._github_oidc_token()
-        if not endpoint or not authorization_token:
-            log.warning("Referencia territorial omitida: no hay identidad OIDC ni token SISC.")
+        if not endpoint:
+            message = f"{path.name}: no se configuro el endpoint SISC."
+            self.failures.append(message)
+            log.warning(message)
+            return False
+        if not self.token and not os.getenv("ACTIONS_ID_TOKEN_REQUEST_URL", "").strip():
+            message = f"{path.name}: no hay identidad OIDC ni token SISC."
+            self.failures.append(message)
+            log.warning(message)
             return False
         try:
             payload = self._build_payload(path, self._cutoff_date(source_cutoff))
-            response = requests.post(
-                endpoint,
-                headers={"Authorization": f"Bearer {authorization_token}"},
-                json=payload,
-                timeout=120,
-            )
-            if response.status_code in (200, 201):
-                result = response.json()
-                log.info(
-                    f"Referencia SISC {result.get('status')}: "
-                    f"{result.get('records', 'sin dato')} agregados, "
-                    f"anos {result.get('coverage_years', [])}."
+        except (OSError, ValueError) as error:
+            message = f"{path.name}: no se pudo construir la referencia ({error})."
+            self.failures.append(message)
+            log.warning(message)
+            return False
+
+        retryable_statuses = {408, 425, 429, 500, 502, 503, 504}
+        last_error = "respuesta desconocida"
+        for attempt in range(1, 4):
+            authorization_token = self.token or self._github_oidc_token()
+            if not authorization_token:
+                last_error = "no se pudo obtener una identidad OIDC vigente"
+                break
+            try:
+                response = requests.post(
+                    endpoint,
+                    headers={"Authorization": f"Bearer {authorization_token}"},
+                    json=payload,
+                    timeout=(15, 90),
                 )
-                return True
-            log.warning(f"Referencia SISC rechazada ({response.status_code}): {response.text[:300]}")
-        except (OSError, ValueError, requests.RequestException) as error:
-            log.warning(f"No se pudo cargar referencia territorial: {error}")
+                if response.status_code in (200, 201):
+                    result = response.json()
+                    log.info(
+                        f"Referencia SISC {result.get('status')}: "
+                        f"{result.get('records', 'sin dato')} agregados, "
+                        f"anos {result.get('coverage_years', [])}."
+                    )
+                    return True
+                last_error = f"HTTP {response.status_code}: {response.text[:300]}"
+                if response.status_code not in retryable_statuses:
+                    break
+            except requests.RequestException as error:
+                last_error = str(error)
+            if attempt < 3:
+                log.warning(
+                    f"Referencia SISC temporalmente no disponible para {path.name} "
+                    f"(intento {attempt}/3): {last_error}"
+                )
+                time.sleep(attempt * 2)
+
+        message = f"{path.name}: {last_error}"
+        self.failures.append(message)
+        log.warning(f"Referencia SISC no sincronizada: {message}")
         return False

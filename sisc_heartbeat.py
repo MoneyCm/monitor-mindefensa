@@ -56,6 +56,7 @@ def _as_non_negative_int(value: Any) -> int:
 def build_payload(
     summary_path: Path = BASE_DIR / "resumen_actual.json",
     state_path: Path = BASE_DIR / "mindefensa_state.json",
+    diagnostics_path: Path = BASE_DIR / "monitor_run_result.json",
     *,
     outcome: str = "success",
     data_changed: bool = False,
@@ -66,6 +67,7 @@ def build_payload(
     workflow_ok = normalized_outcome == "success"
     summary = _load_json(Path(summary_path)) or {}
     state = _load_json(Path(state_path)) or {}
+    diagnostics = _load_json(Path(diagnostics_path)) or {}
     raw_indicators = summary.get("indicadores")
     indicators = raw_indicators if isinstance(raw_indicators, list) else []
     cutoffs = [
@@ -86,6 +88,11 @@ def build_payload(
 
     if not workflow_ok:
         warnings.append("La revision diaria de MinDefensa termino con error.")
+        reference_sync = diagnostics.get("reference_sync")
+        if isinstance(reference_sync, dict):
+            failures = reference_sync.get("failures")
+            if isinstance(failures, list) and failures:
+                warnings.append(str(failures[0])[:500])
     elif not summary:
         warnings.append("La fuente fue revisada, pero no existe un resumen historico procesado.")
     elif not cutoff:
@@ -118,6 +125,7 @@ def build_payload(
             "discovered_assets": len(discovered_assets),
             "check_mode": "official-content-api-metadata-first",
             "source_role": "historical-backup",
+            "diagnostics": diagnostics,
         },
     }
     if cutoff:

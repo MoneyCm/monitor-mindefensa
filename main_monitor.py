@@ -1,5 +1,6 @@
 import os
 import sys
+import json
 import yaml
 import requests
 from pathlib import Path
@@ -15,6 +16,8 @@ from notificar import Notifier
 
 def main():
     log.info("=" * 60)
+    diagnostics_path = Path("monitor_run_result.json")
+    diagnostics_path.unlink(missing_ok=True)
     log.info("MONITOR MINDEFENSA V2.0 - SISTEMA PROFESIONAL")
     log.info("=" * 60)
 
@@ -169,9 +172,19 @@ def main():
 
     if sync_reference:
         log.info(f"Referencia territorial sincronizada en {reference_uploads}/{reference_attempts} archivo(s).")
+        diagnostics = {
+            "reference_sync": {
+                "attempted": reference_attempts,
+                "uploaded": reference_uploads,
+                "failures": reference_exporter.failures if reference_exporter else [],
+            }
+        }
+        diagnostics_path.write_text(json.dumps(diagnostics, ensure_ascii=True), encoding="utf-8")
         if reference_attempts and reference_uploads != reference_attempts:
+            failure_summary = "; ".join(reference_exporter.failures[:3]) if reference_exporter else "sin detalle"
             raise RuntimeError(
-                f"La sincronizacion territorial quedo incompleta: {reference_uploads}/{reference_attempts} archivos."
+                f"La sincronizacion territorial quedo incompleta: {reference_uploads}/{reference_attempts} archivos. "
+                f"{failure_summary}"
             )
     log.info("PIPELINE COMPLETADO EXITOSAMENTE")
 
