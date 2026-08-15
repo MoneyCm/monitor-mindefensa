@@ -13,16 +13,6 @@
       "barrios_top": "Sin datos de barrio"
     },
     {
-      "delito": "Homicidios",
-      "anterior": 66,
-      "actual": 68,
-      "diffAbs": 2,
-      "varPct": "+3.0%",
-      "estado": "SUBE",
-      "ultimo_registro": "30/06/2026",
-      "barrios_top": "Sin datos de barrio"
-    },
-    {
       "delito": "Lesiones Tránsito",
       "anterior": 110,
       "actual": 151,
@@ -33,16 +23,6 @@
       "barrios_top": "Sin datos de barrio"
     },
     {
-      "delito": "Lesiones Personales",
-      "anterior": 199,
-      "actual": 153,
-      "diffAbs": -46,
-      "varPct": "-23.1%",
-      "estado": "BAJA",
-      "ultimo_registro": "25/06/2026",
-      "barrios_top": "Sin datos de barrio"
-    },
-    {
       "delito": "Masacres",
       "anterior": 3,
       "actual": 0,
@@ -50,16 +30,6 @@
       "varPct": "-100.0%",
       "estado": "BAJA",
       "ultimo_registro": "10/06/2025",
-      "barrios_top": "Sin datos de barrio"
-    },
-    {
-      "delito": "Extorsión",
-      "anterior": 15,
-      "actual": 16,
-      "diffAbs": 1,
-      "varPct": "+6.7%",
-      "estado": "SUBE",
-      "ultimo_registro": "14/05/2026",
       "barrios_top": "Sin datos de barrio"
     },
     {
@@ -93,26 +63,6 @@
       "barrios_top": "Sin datos de barrio"
     },
     {
-      "delito": "Hurtos de Vehículos",
-      "anterior": 102,
-      "actual": 106,
-      "diffAbs": 4,
-      "varPct": "+3.9%",
-      "estado": "SUBE",
-      "ultimo_registro": "30/06/2026",
-      "barrios_top": "Sin datos de barrio"
-    },
-    {
-      "delito": "Hurtos a Personas",
-      "anterior": 253,
-      "actual": 177,
-      "diffAbs": -76,
-      "varPct": "-30.0%",
-      "estado": "BAJA",
-      "ultimo_registro": "26/06/2026",
-      "barrios_top": "Sin datos de barrio"
-    },
-    {
       "delito": "Piratería Terrestre",
       "anterior": 0,
       "actual": 0,
@@ -120,16 +70,6 @@
       "varPct": "N/A",
       "estado": "IGUAL",
       "ultimo_registro": "11/12/2022",
-      "barrios_top": "Sin datos de barrio"
-    },
-    {
-      "delito": "Violencia Intrafamiliar",
-      "anterior": 92,
-      "actual": 152,
-      "diffAbs": 60,
-      "varPct": "+65.2%",
-      "estado": "SUBE",
-      "ultimo_registro": "25/06/2026",
       "barrios_top": "Sin datos de barrio"
     },
     {
@@ -180,6 +120,66 @@
       "varPct": "-15.5%",
       "estado": "BAJA",
       "ultimo_registro": "28/06/2026",
+      "barrios_top": "Sin datos de barrio"
+    },
+    {
+      "delito": "Homicidios",
+      "anterior": 66,
+      "actual": 68,
+      "diffAbs": 2,
+      "varPct": "+3.0%",
+      "estado": "SUBE",
+      "ultimo_registro": "30/06/2026",
+      "barrios_top": "Sin datos de barrio"
+    },
+    {
+      "delito": "Hurtos a Personas",
+      "anterior": 253,
+      "actual": 177,
+      "diffAbs": -76,
+      "varPct": "-30.0%",
+      "estado": "BAJA",
+      "ultimo_registro": "26/06/2026",
+      "barrios_top": "Sin datos de barrio"
+    },
+    {
+      "delito": "Hurtos de Vehículos",
+      "anterior": 102,
+      "actual": 106,
+      "diffAbs": 4,
+      "varPct": "+3.9%",
+      "estado": "SUBE",
+      "ultimo_registro": "30/06/2026",
+      "barrios_top": "Sin datos de barrio"
+    },
+    {
+      "delito": "Extorsión",
+      "anterior": 15,
+      "actual": 16,
+      "diffAbs": 1,
+      "varPct": "+6.7%",
+      "estado": "SUBE",
+      "ultimo_registro": "14/05/2026",
+      "barrios_top": "Sin datos de barrio"
+    },
+    {
+      "delito": "Violencia Intrafamiliar",
+      "anterior": 92,
+      "actual": 152,
+      "diffAbs": 60,
+      "varPct": "+65.2%",
+      "estado": "SUBE",
+      "ultimo_registro": "25/06/2026",
+      "barrios_top": "Sin datos de barrio"
+    },
+    {
+      "delito": "Lesiones Personales",
+      "anterior": 199,
+      "actual": 153,
+      "diffAbs": -46,
+      "varPct": "-23.1%",
+      "estado": "BAJA",
+      "ultimo_registro": "25/06/2026",
       "barrios_top": "Sin datos de barrio"
     }
   ]
