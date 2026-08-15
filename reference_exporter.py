@@ -171,9 +171,21 @@ class ReferenceExporter:
             return "Lesiones Personales"
         return "Delito General"
 
+    @classmethod
+    def is_priority_file(cls, path: Path) -> bool:
+        normalized_name = cls._normalize(path.name)
+        return any(cls._normalize(pattern) in normalized_name for pattern in cls.PRIORITY_DATASETS)
+
+    @staticmethod
+    def _cutoff_date(value: object) -> str:
+        if isinstance(value, dict):
+            value = value.get("value")
+        if isinstance(value, str) and len(value) >= 10:
+            return value[:10]
+        return date.today().isoformat()
+
     def export_file(self, path: Path, source_cutoff: Optional[str] = None) -> bool:
-        normalized_name = self._normalize(path.name)
-        if not any(self._normalize(pattern) in normalized_name for pattern in self.PRIORITY_DATASETS):
+        if not self.is_priority_file(path):
             log.info(f"Referencia territorial no requerida para: {path.name}")
             return False
 
@@ -183,7 +195,7 @@ class ReferenceExporter:
             log.warning("Referencia territorial omitida: no hay identidad OIDC ni token SISC.")
             return False
         try:
-            payload = self._build_payload(path, source_cutoff)
+            payload = self._build_payload(path, self._cutoff_date(source_cutoff))
             response = requests.post(
                 endpoint,
                 headers={"Authorization": f"Bearer {authorization_token}"},

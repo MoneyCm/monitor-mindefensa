@@ -76,6 +76,7 @@ def main():
     processor = DataProcessor()
     reference_exporter = ReferenceExporter() if sync_reference else None
     reference_uploads = 0
+    reference_attempts = 0
     resultados = {}
     
     # Filtrar solo archivos de interés basados en patrones de config
@@ -95,8 +96,10 @@ def main():
                 ruta_local = processor.output_dir / a['nombre']
                 ruta_local.write_bytes(r.content)
 
-                if reference_exporter and reference_exporter.export_file(ruta_local, a.get("fecha")):
-                    reference_uploads += 1
+                if reference_exporter and reference_exporter.is_priority_file(ruta_local):
+                    reference_attempts += 1
+                    if reference_exporter.export_file(ruta_local, a.get("fecha")):
+                        reference_uploads += 1
                 
                 # Procesar ETL
                 log.info(f"Procesando ETL: {a['nombre']}")
@@ -145,9 +148,11 @@ def main():
         pdf_path = pdf_gen.generar(resultados)
         reporte_ok = True
         
-        # 8. Exportar a SISC API
-        exporter = SISCExporter()
-        exporter.exportar(resultados)
+        # 8. La referencia compacta reemplaza el exportador historico por filas.
+        if os.environ.get("SISC_LEGACY_EXPORT", "false").lower() == "true":
+            SISCExporter().exportar(resultados)
+        else:
+            log.info("Exportacion historica por filas omitida; se usa la referencia compacta del SISC.")
         
         # 9. Notificar
         if os.environ.get("SEND_EMAIL", "true").strip().lower() == "true":
@@ -162,9 +167,13 @@ def main():
             f.write(f"hay_cambios=true\n")
             f.write(f"reporte_generado={str(reporte_ok).lower()}\n")
 
-    log.info("PIPELINE COMPLETADO EXITOSAMENTE")
     if sync_reference:
-        log.info(f"Referencia territorial sincronizada en {reference_uploads} archivo(s).")
+        log.info(f"Referencia territorial sincronizada en {reference_uploads}/{reference_attempts} archivo(s).")
+        if reference_attempts and reference_uploads != reference_attempts:
+            raise RuntimeError(
+                f"La sincronizacion territorial quedo incompleta: {reference_uploads}/{reference_attempts} archivos."
+            )
+    log.info("PIPELINE COMPLETADO EXITOSAMENTE")
 
 if __name__ == "__main__":
     try:
