@@ -139,6 +139,23 @@ class ReferenceExporter:
             {"anio": int(year), "municipality_codes": sorted(group["codigo_dane"].unique().tolist())}
             for year, group in compact.groupby("anio")
         ]
+        period_end_by_year = compact.groupby("anio")["mes"].max().to_dict()
+        municipal_totals = compact.groupby(["codigo_dane", "anio"], as_index=False).agg(
+            municipio=("municipio", "first"),
+            departamento=("departamento", "first"),
+            cantidad=("cantidad", "sum"),
+        )
+        municipal_totals["period_end_month"] = municipal_totals["anio"].map(period_end_by_year)
+        municipal_totals = municipal_totals[
+            [
+                "codigo_dane",
+                "municipio",
+                "departamento",
+                "anio",
+                "period_end_month",
+                "cantidad",
+            ]
+        ]
         national = compact.groupby(["anio", "mes"], as_index=False)["cantidad"].sum()
         national["codigo_dane"] = "NACIONAL"
         national["municipio"] = "Colombia"
@@ -154,6 +171,7 @@ class ReferenceExporter:
             "tipo_delito": self._crime_type(path.name),
             "source_cutoff": (source_cutoff or date.today().isoformat())[:10],
             "coverage": coverage,
+            "municipal_totals": municipal_totals.to_dict(orient="records"),
             "records": records.to_dict(orient="records"),
         }
 
