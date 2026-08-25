@@ -1,159 +1,159 @@
 {
-  "ultima_revision": "2026-08-15T03:09:10.642264",
+  "ultima_revision": "2026-08-25T13:44:13.915156",
   "archivos": {
     "HOMICIDIO ACCIDENTES DE TRÁNSITO.xlsx": {
       "fecha": {
-        "value": "2026-07-21T23:46:04.867Z",
+        "value": "2026-08-18T17:16:13.117Z",
         "timezone": "UTC"
       },
-      "id": "CONTD456E9301E634D93ACBCF54B70942138"
+      "id": "CONT55098989546B4C9AA7BDC4AD93EED615"
     },
     "HOMICIDIO INTENCIONAL.xlsx": {
       "fecha": {
-        "value": "2026-07-21T23:47:04.607Z",
+        "value": "2026-08-18T17:16:46.452Z",
         "timezone": "UTC"
       },
-      "id": "CONTD2155DC1726D4A21B0B8267F91325AB5"
+      "id": "CONT277702F4D1594584BC83F31A6060F235"
     },
     "LESIONES ACCIDENTES DE TRÁNSITO.xlsx": {
       "fecha": {
-        "value": "2026-07-21T23:47:53.655Z",
+        "value": "2026-08-18T17:17:17.638Z",
         "timezone": "UTC"
       },
-      "id": "CONT4DA40868407D4752B24BE742D8BF0452"
+      "id": "CONTB07C60EFD1B647E4B1CA9D1EA286B509"
     },
     "LESIONES COMUNES.xlsx": {
       "fecha": {
-        "value": "2026-07-21T23:49:10.420Z",
+        "value": "2026-08-18T17:17:47.750Z",
         "timezone": "UTC"
       },
-      "id": "CONT53C09FE87BE14ACE904069DB6848C811"
+      "id": "CONTD1E88538AC4E42E09172A0D9910C40C2"
     },
     "MASACRES.xlsx": {
       "fecha": {
-        "value": "2026-07-21T23:45:36.649Z",
+        "value": "2026-08-18T17:18:10.721Z",
         "timezone": "UTC"
       },
-      "id": "CONT7B88CCACEDD441E3984D326E3696DB5E"
+      "id": "CONT288E998950354847BD1F12EA1B5B7A98"
     },
     "EXTORSIÓN.xlsx": {
       "fecha": {
-        "value": "2026-07-22T00:01:31.245Z",
+        "value": "2026-08-18T16:46:52.166Z",
         "timezone": "UTC"
       },
-      "id": "CONT7154F2FB1B264CDCAD9A48A3BEE58A77"
+      "id": "CONTC784725891C547A1B33258E01287EBC2"
     },
     "HURTO A COMERCIO.xlsx": {
       "fecha": {
-        "value": "2026-07-22T00:02:20.377Z",
+        "value": "2026-08-18T16:47:22.606Z",
         "timezone": "UTC"
       },
-      "id": "CONT1F6023E051B746DAA1F3E4075209A882"
+      "id": "CONTA3FCC6DDEAEE463CA60C77F930EFAB2E"
     },
     "HURTO A RESIDENCIAS.xlsx": {
       "fecha": {
-        "value": "2026-07-22T00:03:48.926Z",
+        "value": "2026-08-18T16:47:52.070Z",
         "timezone": "UTC"
       },
-      "id": "CONT278B01DD860B435DB5ECC2AB6ABC3EDB"
+      "id": "CONT807B687C6FE847F09B593C5601ADE7A1"
     },
     "HURTO ABIGEATO.xlsx": {
       "fecha": {
-        "value": "2026-07-22T00:04:16.227Z",
+        "value": "2026-08-18T16:48:38.218Z",
         "timezone": "UTC"
       },
-      "id": "CONTA10A2B7AA8244E908DE49ADC66350C71"
+      "id": "CONT537CF0DA252843B9887C6429FCF2BCA4"
     },
     "HURTO DE VEHÍCULOS.xlsx": {
       "fecha": {
-        "value": "2026-07-22T00:05:54.248Z",
+        "value": "2026-08-18T16:55:05.528Z",
         "timezone": "UTC"
       },
-      "id": "CONT2BF65517CF044CC19DD6CB5BB4A7B411"
+      "id": "CONTFFF3F468683A4A68848EC3F7B443E0DB"
     },
     "HURTO ENTIDADES FINANCIERAS.xlsx": {
       "fecha": {
-        "value": "2026-07-22T00:06:34.390Z",
+        "value": "2026-08-18T16:55:35.682Z",
         "timezone": "UTC"
       },
-      "id": "CONT253B6D0EC16D4FC58A6A28EE5C40634E"
+      "id": "CONTEF17515FB4174FD88132B117C08EB780"
     },
     "HURTO PERSONAS.xlsx": {
       "fecha": {
-        "value": "2026-07-22T00:07:29.172Z",
+        "value": "2026-08-24T15:10:16.874Z",
         "timezone": "UTC"
       },
-      "id": "CONTEBDF030F568F49A4A73563ADB8DBA8AB"
+      "id": "CONTF17A630F3EC5449ABE780BF1440B46FB"
     },
     "INVASIÓN DE TIERRAS.xlsx": {
       "fecha": {
-        "value": "2026-07-22T00:09:17.331Z",
+        "value": "2026-08-18T16:57:05.680Z",
         "timezone": "UTC"
       },
-      "id": "CONTFFC7807A03264C39B2A068EA6C732896"
+      "id": "CONT142196E5BE2E43C883984D5B415AA033"
     },
     "PIRATERÍA TERRESTRE.xlsx": {
       "fecha": {
-        "value": "2026-07-22T00:09:40.511Z",
+        "value": "2026-08-18T16:57:43.659Z",
         "timezone": "UTC"
       },
-      "id": "CONT3521D1E9F98A443995EC01D2E046D974"
+      "id": "CONT8990849AAB5D4B0E89B41BFDDA42EA43"
     },
     "VIOLENCIA INTRAFAMILIAR.xlsx": {
       "fecha": {
-        "value": "2026-07-22T00:15:13.574Z",
+        "value": "2026-08-18T16:59:04.485Z",
         "timezone": "UTC"
       },
-      "id": "CONT93A3E06E0C134EF197783385D56AABBF"
+      "id": "CONTE790B35DAF5C40B49C8B2B77AC7F0D08"
     },
     "DELITOS SEXUALES.xlsx": {
       "fecha": {
-        "value": "2026-07-22T00:17:48.080Z",
+        "value": "2026-08-18T17:13:44.592Z",
         "timezone": "UTC"
       },
-      "id": "CONTEBEA4A10A270484195D139CF815742F3"
+      "id": "CONTC70D2CECDB0D44BCB327E1BC35861260"
     },
     "SECUESTRO.xlsx": {
       "fecha": {
-        "value": "2026-07-22T00:16:33.195Z",
+        "value": "2026-08-18T16:59:43.259Z",
         "timezone": "UTC"
       },
-      "id": "CONTDC54E523A2BA492AA1C57065A0D3C6D8"
+      "id": "CONT252DE86D42DB4726B6772B3E48334A25"
     },
     "TRATA DE PERSONAS Y TRÁFICO DE MIGRANTES.xlsx": {
       "fecha": {
-        "value": "2026-07-22T00:17:02.515Z",
+        "value": "2026-08-18T17:00:08.805Z",
         "timezone": "UTC"
       },
-      "id": "CONT03B8C922E3C54A1698E6FE92BDA66FB4"
+      "id": "CONT8514F2C592C44391A27A90DFDF389FF0"
     },
     "PUENTES Y VÍAS.xlsx": {
       "fecha": {
-        "value": "2026-07-21T23:55:14.263Z",
+        "value": "2026-08-18T17:14:45.664Z",
         "timezone": "UTC"
       },
-      "id": "CONT19B22F2F695A4CDD8EFE44B2A88A8AFE"
+      "id": "CONT4298666698CF4153992EAF30C3E49BD3"
     },
     "TERRORISMO.xlsx": {
       "fecha": {
-        "value": "2026-07-21T23:55:35.446Z",
+        "value": "2026-08-18T17:15:05.683Z",
         "timezone": "UTC"
       },
-      "id": "CONTDF4D607F36A147BBAD763111C365256E"
+      "id": "CONT4829E9BD2BB9432C97628AF7982E47C2"
     },
     "VOLADURA DE OLEODUCTOS.xlsx": {
       "fecha": {
-        "value": "2026-07-21T23:56:03.880Z",
+        "value": "2026-08-18T17:15:34.854Z",
         "timezone": "UTC"
       },
-      "id": "CONTA4D0847400934551B61A93D9C6B0E521"
+      "id": "CONTCE258778B39D45229FD98E242E3129C0"
     },
     "DELITOS INFORMÁTICOS.xlsx": {
       "fecha": {
-        "value": "2026-07-21T23:54:16.039Z",
+        "value": "2026-08-18T17:14:17.064Z",
         "timezone": "UTC"
       },
-      "id": "CONT92AC3B93285642069C008C997FA6F8DA"
+      "id": "CONT2F5C0B6AE8844F4EA617D30C9E6DE9D7"
     }
   },
   "ultima_ingesta_sisc": {
@@ -163,5 +163,5 @@
     "detalle": []
   },
   "nuevos_ultimo": 0,
-  "cambios_ultimo": 0
+  "cambios_ultimo": 22
 }
