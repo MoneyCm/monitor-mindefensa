@@ -20,6 +20,41 @@ class MinDefensaScraperTests(unittest.TestCase):
         self.assertIn("/CONT123/native", asset["url"])
         self.assertEqual(asset["fecha"]["value"], "2026-07-21T10:00:00Z")
 
+    def test_asset_from_item_restores_extension_for_current_api_shape(self):
+        item = {
+            "id": "CONT456",
+            "name": "HOMICIDIO INTENCIONAL",
+            "updatedDate": {"value": "2026-08-18T17:16:46.452Z"},
+            "fields": {
+                "filecategory": MinDefensaScraper.FILE_CATEGORIES[0],
+                "mimeType": None,
+                "native": {
+                    "links": [
+                        {
+                            "href": (
+                                "https://www.mindefensa.gov.co/assets/CONT456/native/"
+                                "HOMICIDIO INTENCIONAL"
+                            )
+                        }
+                    ]
+                },
+            },
+        }
+
+        asset = MinDefensaScraper._asset_from_item(item)
+
+        self.assertEqual(asset["nombre"], "HOMICIDIO INTENCIONAL.xlsx")
+        self.assertEqual(asset["id"], "CONT456")
+
+    def test_asset_from_item_rejects_extensionless_non_statistical_document(self):
+        item = {
+            "id": "CONT789",
+            "name": "INFORME FINANCIERO",
+            "fields": {"filecategory": "Finanzas-Boletines"},
+        }
+
+        self.assertIsNone(MinDefensaScraper._asset_from_item(item))
+
     def test_discover_via_api_deduplicates_assets(self):
         response = Mock()
         response.raise_for_status.return_value = None

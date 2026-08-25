@@ -52,8 +52,22 @@ class MinDefensaScraper:
             or ""
         ).strip()
         asset_id = item.get("id")
-        if not asset_id or not name.upper().endswith(".XLSX"):
+        category = str(fields.get("filecategory") or "").strip()
+        has_xlsx_extension = name.upper().endswith(".XLSX")
+
+        # MinDefensa republished the statistical assets without filename
+        # extensions in August 2026. Category-scoped API results still point to
+        # XLSX content, so preserve the stable local filename expected by the
+        # downloader, state file and ETL pipeline.
+        is_extensionless_statistical_asset = (
+            bool(name)
+            and "." not in name
+            and category in cls.FILE_CATEGORIES
+        )
+        if not asset_id or not (has_xlsx_extension or is_extensionless_statistical_asset):
             return None
+        if is_extensionless_statistical_asset:
+            name = f"{name}.xlsx"
         return {
             "nombre": name,
             "id": asset_id,
