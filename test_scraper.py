@@ -80,6 +80,34 @@ class MinDefensaScraperTests(unittest.TestCase):
         self.assertEqual(len(assets), 1)
         self.assertEqual(session.get.call_count, len(scraper.FILE_CATEGORIES))
 
+    def test_validar_payload_rechaza_esquema_inesperado(self):
+        with self.assertRaisesRegex(RuntimeError, "cambio su esquema"):
+            MinDefensaScraper._validar_payload({"otro": []}, "categoria-x")
+        with self.assertRaisesRegex(RuntimeError, "cambio su esquema"):
+            MinDefensaScraper._validar_payload({"items": "no-lista"}, "categoria-x")
+        with self.assertRaisesRegex(RuntimeError, "cambio su esquema"):
+            MinDefensaScraper._validar_payload(["lista"], "categoria-x")
+
+    def test_validar_payload_acepta_esquema_valido(self):
+        items = [{"id": "CONT123"}]
+        self.assertEqual(
+            MinDefensaScraper._validar_payload({"items": items, "hasMore": False}, "categoria-x"),
+            items,
+        )
+
+    def test_discover_via_api_reporta_cambio_de_esquema(self):
+        response = Mock()
+        response.raise_for_status.return_value = None
+        response.json.return_value = {"resultado": []}
+        session = Mock()
+        session.get.return_value = response
+
+        with patch("scraper.requests.Session", return_value=session):
+            scraper = MinDefensaScraper.__new__(MinDefensaScraper)
+            scraper.cfg = {"umbrales": {"timeout_playwright": 1000}}
+            with self.assertRaisesRegex(RuntimeError, "cambio su esquema"):
+                scraper._discover_via_api()
+
 
 if __name__ == "__main__":
     unittest.main()

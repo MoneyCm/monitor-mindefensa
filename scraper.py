@@ -83,6 +83,21 @@ class MinDefensaScraper:
             unique[asset["nombre"].upper().strip()] = asset
         return list(unique.values())
 
+    @staticmethod
+    def _validar_payload(payload, category):
+        """Valida el esquema de la API para detectar cambios del proveedor.
+
+        Devuelve la lista de items. Lanza RuntimeError con un mensaje
+        distintivo si la respuesta ya no trae el esquema esperado, de modo
+        que el log y la alerta identifiquen la causa sin adivinar.
+        """
+        if not isinstance(payload, dict) or not isinstance(payload.get("items"), list):
+            raise RuntimeError(
+                "La API de MinDefensa cambio su esquema de respuesta "
+                f"(categoria: {category}): se esperaba un objeto con 'items'."
+            )
+        return payload["items"]
+
     def _api_params(self, category, offset):
         return {
             "siteId": self.SITE_ID,
@@ -111,7 +126,7 @@ class MinDefensaScraper:
                 )
                 response.raise_for_status()
                 payload = response.json()
-                items = payload.get("items") or []
+                items = self._validar_payload(payload, category)
                 for item in items:
                     asset = self._asset_from_item(item)
                     if asset:

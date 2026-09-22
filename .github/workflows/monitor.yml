@@ -98,5 +98,8 @@ jobs:
 
       - name: Alerta de Fallo
         if: failure()
+        env:
+          GMAIL_USER: ${{ secrets.GMAIL_USER }}
+          GMAIL_PASS: ${{ secrets.GMAIL_APP_PASSWORD }}
         run: |
-          echo "::error::El monitor ha fallado. Revisar logs de la ejecución."
+          python alertas.py --motivo fallo

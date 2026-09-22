@@ -15,9 +15,11 @@ correo:
   prefijo_reunion: "📋 Reunión Planeación"
   prefijo_consejo: "🔒 Consejo Seguridad"
   destinatarios: ["secretaria.seguridad@jamundi.gov.co"]
+  destinatarios_alertas: ["secretaria.seguridad@jamundi.gov.co"]
 
 umbrales:
   max_descargas_por_run: 60
+  max_dias_sin_importacion: 7
   timeout_playwright: 120000
 
 alias_columnas:
