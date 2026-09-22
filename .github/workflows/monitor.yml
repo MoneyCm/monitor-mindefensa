@@ -44,6 +44,7 @@ jobs:
       - name: Instalar Dependencias
         run: |
           pip install -r requirements.txt
+          python -m playwright install --with-deps chromium
 
       - name: Restaurar cache de Excel
         uses: actions/cache/restore@v4
@@ -60,6 +61,7 @@ jobs:
           GMAIL_PASS: ${{ secrets.GMAIL_APP_PASSWORD }}
           SISC_TOKEN: ${{ secrets.SISC_TOKEN }}
           SISC_API_URL: ${{ secrets.SISC_API_URL || 'https://sisc-backend.onrender.com/api' }}
+          MINDEFENSA_BROWSER_FALLBACK: "true"
           FORCE_DOWNLOAD: ${{ github.event.inputs.force_download || 'false' }}
           SYNC_REFERENCE: ${{ github.event.inputs.sync_reference || 'false' }}
           SEND_EMAIL: ${{ github.event_name != 'workflow_dispatch' || inputs.notify == true }}
