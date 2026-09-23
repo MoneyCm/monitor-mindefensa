@@ -34,7 +34,7 @@ class Notifier:
             <tr>
                 <td style="padding:10px; border-bottom:1px solid #eee;"><b>{r['delito']}</b></td>
                 <td style="padding:10px; border-bottom:1px solid #eee; text-align:center;">{r['actual']}</td>
-                <td style="padding:10px; border-bottom:1px solid #eee; text-align:center; color:{color}; font-weight:bold;">{r['variacion']}</td>
+                <td style="padding:10px; border-bottom:1px solid #eee; text-align:center; color:{color}; font-weight:bold;">{r.get('variacion', r.get('varPct', 'N/A'))}</td>
                 <td style="padding:10px; border-bottom:1px solid #eee; text-align:center; font-size: 11px;">{ult_reg}</td>
                 <td style="padding:10px; border-bottom:1px solid #eee; font-size: 11px; color:#555;">{barrios}</td>
             </tr>
